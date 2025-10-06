@@ -1,7 +1,5 @@
 import numpy as np
-import sys
 
-sys.path.append("mytorch")
 from HW3.mytorch.gru_cell import *
 from HW3.mytorch.linear import *
 

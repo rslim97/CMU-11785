@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 
 from HW3.mytorch.rnn_cell import *
 from HW3.mytorch.linear import *
