@@ -30,7 +30,7 @@ class Conv1d_stride1:
         W_out = (W_in - self.K) + 1
         z = np.empty(shape=(N, self.C_out, W_out), dtype=np.float64)
         for i in range(W_out):
-            z[:, :, i] = np.tensordot(x[:, :, i:i + self.K], self.W, axes=((1,2),(1,2))) + self.b.reshape(-1)
+            z[:, :, i] = np.tensordot(x[:, :, i:i + self.K], self.W, axes=((1, 2), (1, 2))) + self.b.reshape(-1)
         return z
 
     def backward(self, dLdz):
@@ -39,26 +39,35 @@ class Conv1d_stride1:
         assert C_out == self.C_out and C_in == self.C_in
         # find dLdW
         self.dLdW = np.empty(shape=(C_out, C_in, self.K), dtype=np.float64)
-        for i in range(C_out):
-            # Convolve input x with dLdz as filter.
-            for j in range(self.K):
-                # With tensordot, broadcasting is handled implicitly.
-                # Size of immediate result after convolution is (C_in, 1) reshape to (C_in,).
-                self.dLdW[i, :, j] = np.tensordot(self.x[:, :, j:j+W_out], dLdz[:, i:i+1, :],
-                                                  axes=((0,2),(0,2))).reshape(-1)
+        # for i in range(C_out):
+        #     # Convolve input x with dLdz as filter.
+        #     for j in range(self.K):
+        #         # With tensordot, broadcasting is handled implicitly.
+        #         # Size of immediate result after convolution is (C_in, 1) reshape to (C_in,).
+        #         self.dLdW[i, :, j] = np.tensordot(self.x[:, :, j:j+W_out], dLdz[:, i:i+1, :],
+        #                                           axes=((0,2),(0,2))).reshape(-1)
+        for i in range(self.K):
+            self.dLdW[:, :, i] = np.tensordot(self.x[:, :, i:i+W_out], dLdz, axes=((0, 2), (0, 2))).transpose(1, 0)
+
         # find dLdb
         self.dLdb = np.sum(dLdz, axis=(0, 2))
         # find dLdx
         dLdx = np.zeros(shape=self.x.shape, dtype=np.float64)
-        # pad dLdz with K-1 zeros left and right, to gain back K-1 columns loss during forward,
-        # i.e. to get back original input size.
+        # pad dLdz with K-1 zeros left and right
+        # dLdz size: before: W_in-K+1, after: W_in-K+1+2(K-1) = W_in+K-1
+        # i.e. to get back original input size, W_in, after convolving dLdz with 180^o rotated kernel as filter.
         dLdz = np.pad(dLdz, pad_width=((0, 0), (0, 0), (self.K - 1, self.K - 1)), mode='constant')
-        for i in range(C_out):
-            # Convolve dLdz with 180^o rotated kernel as filter.
-            for j in range(W_in):
-                # because all outputs are of the same size (N, C_in) we should accumulate the results.
-                dLdx[:, :, j] += np.tensordot(dLdz[:, i:i+1, j:j+self.K], np.flip(self.W[i:i+1, :, :],
-                                                                                  axis=2), axes=((1,2),(0,2)))
+
+        # for i in range(C_out):
+        #     # Convolve dLdz with 180^o rotated kernel as filter.
+        #     for j in range(W_in):
+        #         # because all outputs are of the same size (N, C_in) we should accumulate the results.
+        #         dLdx[:, :, j] += np.tensordot(dLdz[:, i:i+1, j:j+self.K], np.flip(self.W[i:i+1, :, :],
+        #                                                                           axis=2), axes=((1,2),(0,2)))
+
+        for i in range(W_in):
+            dLdx[:, :, i] = np.tensordot(dLdz[:, :, i:i+self.K], np.flip(self.W, axis=2),
+                                         axes=((1, 2), (0, 2)))
         return dLdx
 
 class Conv1d:
