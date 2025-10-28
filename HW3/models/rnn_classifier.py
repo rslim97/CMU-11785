@@ -149,6 +149,7 @@ class RNNPhonemeClassifier(object):
         """
         for t in reversed(range(seq_len)):
             for l in reversed(range(len(self.rnn))):
+                h_t = self.hiddens[t + 1][l]
                 h_prev_t = self.hiddens[t][l]
                 # Get h_prev_l from hiddens or from x
                 # If at input layer
@@ -159,7 +160,6 @@ class RNNPhonemeClassifier(object):
                     h_prev_l = self.hiddens[t + 1][l - 1]
                 # Call backwards
                 # Use dh and hiddens to get the other parameters for the backward method
-                h_t = self.hiddens[t + 1][l]
                 dx, dh_prev_t = self.rnn[l].backward(dh[l], h_t, h_prev_l, h_prev_t)
                 # Update dh with the new dh from the backward pass of the rnn cell
                 dh[l] = dh_prev_t
