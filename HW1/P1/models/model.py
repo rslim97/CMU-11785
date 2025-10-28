@@ -1,6 +1,7 @@
 from HW1.P1.mytorch.linear import *
 from HW1.P1.mytorch.activation import *
 
+
 class Model:
     def __init__(self):
         self.layers = None
@@ -11,12 +12,13 @@ class Model:
     def backward(self, dLdx):
         raise NotImplementedError()
 
+
 class MLP0(Model):
 
-    def __init__(self, debug = False):
+    def __init__(self, debug=False):
         Model.__init__(self)
         self.debug = debug
-        self.layers = [Linear(2,3), ReLU()]
+        self.layers = [Linear(2, 3), ReLU()]
 
     def forward(self, A0):
         # l = len(self.layers)
@@ -41,9 +43,10 @@ class MLP0(Model):
 
         return dLdA0
 
+
 class MLP1(Model):
 
-    def __init__(self, debug = False):
+    def __init__(self, debug=False):
         Model.__init__(self)
         self.debug = debug
         self.layers = [Linear(2, 3), ReLU(), Linear(3, 2), ReLU()]

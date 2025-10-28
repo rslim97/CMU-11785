@@ -1,6 +1,7 @@
 import sys
-sys.path.append('P1/models')
-sys.path.append('P1/mytorch')
+
+sys.path.append("P1/models")
+sys.path.append("P1/mytorch")
 from model import Model
 from linear import *
 from activation import *
@@ -29,15 +30,18 @@ class myFirstMLP(Model):
             dLdx = self.layers[i].backward(dLdx)
         return dLdx
 
+
 class mySecondMLP(Model):
     def __init__(self):
         super().__init__()
-        self.layers = [Linear(1, 10),
-                       ReLU(),
-                       Linear(10, 24),
-                       ReLU(),
-                       Linear(24, 1),
-                       Identity()]
+        self.layers = [
+            Linear(1, 10),
+            ReLU(),
+            Linear(10, 24),
+            ReLU(),
+            Linear(24, 1),
+            Identity(),
+        ]
 
     def forward(self, x):
         l = len(self.layers)
@@ -50,17 +54,20 @@ class mySecondMLP(Model):
         for i in reversed(range(l)):
             dLdx = self.layers[i].backward(dLdx)
         return dLdx
+
 
 class myThirdMLP(Model):
     def __init__(self):
         super().__init__()
-        self.layers = [Linear(1, 10),
-                       ReLU(),
-                       Linear(10, 24),
-                       BatchNorm1d(24),
-                       ReLU(),
-                       Linear(24, 1),
-                       Identity()]
+        self.layers = [
+            Linear(1, 10),
+            ReLU(),
+            Linear(10, 24),
+            BatchNorm1d(24),
+            ReLU(),
+            Linear(24, 1),
+            Identity(),
+        ]
 
     def forward(self, x):
         l = len(self.layers)
@@ -73,6 +80,7 @@ class myThirdMLP(Model):
         for i in reversed(range(l)):
             dLdx = self.layers[i].backward(dLdx)
         return dLdx
+
 
 def get_batches(dataset, batch_size):
     # x = dataset[0, :].reshape(-1, 1)
@@ -94,11 +102,13 @@ def get_batches(dataset, batch_size):
         # print("y[batch_index] :", y[batch_index])
         yield x[batch_index], y[batch_index]
 
+
 def normalize(x):
     N = x.shape[0]
     mu = np.sum(x, axis=0, keepdims=True) / N
     var = np.sum((x - mu) * (x - mu), axis=0, keepdims=True) / N
     x[:] = (x - mu) / np.sqrt(var + 1e-8)  # modify in-place
+
 
 # def to_column(x):
 #     return x.reshape(-1, 1)
@@ -192,7 +202,6 @@ if __name__ == "__main__":
         losses.append(np.mean(train_batch_loss))
         # losses.append(mean_loss/ (x.shape[0] / batch_size))
 
-
     # """ Plot results """
     # # test case
     # y_test = y.flatten() + np.random.randn(len(x)) / 5
@@ -207,7 +216,7 @@ if __name__ == "__main__":
 
     """ Animate """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
-    ax1.set_aspect('equal')
+    ax1.set_aspect("equal")
     # fig.suptitle('one-hidden-layer-MLP : [1, 32, 1]')
     # fig.suptitle('two-hidden-layer-MLP : [1, 10, 24, 1]')
     # fig.suptitle('two-hidden-layer-MLP with BatchNorm : [1, 10, 24, BN, 1]')
@@ -221,16 +230,24 @@ if __name__ == "__main__":
         ax1.plot(x, outputs_per_epoch[i])
         # ax1.set_title('one-hidden-layer-MLP : [1, 32, 1]')
         # ax1.set_title('two-hidden-layer-MLP : [1, 10, 24, 1]')
-        ax1.set_title('two-hidden-layer-MLP with BatchNorm\n [1, 10, 24, BN, 1]')
-        ax2.text(0.5, 0.5, f"epoch: {i+step}", verticalalignment='center', horizontalalignment='center',
-                 transform=ax2.transAxes)
-        ax2.plot(np.arange(i+step), losses[0:i+step], 'tab:blue')
-        ax2.set_title('Training loss')
+        ax1.set_title("two-hidden-layer-MLP with BatchNorm\n [1, 10, 24, BN, 1]")
+        ax2.text(
+            0.5,
+            0.5,
+            f"epoch: {i+step}",
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=ax2.transAxes,
+        )
+        ax2.plot(np.arange(i + step), losses[0 : i + step], "tab:blue")
+        ax2.set_title("Training loss")
         # line3, = ax2.plot(x, ou)
         # return line, line2, text
         return []
 
-    ani = FuncAnimation(fig, animate, frames=frames, interval=50, blit=False, repeat=False)
+    ani = FuncAnimation(
+        fig, animate, frames=frames, interval=50, blit=False, repeat=False
+    )
     ani.save("P1/gif/animation1.gif", dpi=300, writer=PillowWriter(fps=15))
     plt.show()
 

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Activation:
     def __init__(self):
         self.x = None
@@ -10,6 +11,7 @@ class Activation:
     def backward(self, dLdx):
         raise NotImplementedError()
 
+
 class Identity(Activation):
     def forward(self, z):
         self.x = z
@@ -19,6 +21,7 @@ class Identity(Activation):
         dxdz = np.ones_like(self.x)
         dLdz = dLdx * dxdz
         return dLdz
+
 
 class ReLU(Activation):
     def forward(self, z):
@@ -31,6 +34,7 @@ class ReLU(Activation):
         dLdz = dLdx * dxdz
         return dLdz
 
+
 class Tanh(Activation):
     def forward(self, z):
         self.x = (np.exp(z) - np.exp(-z)) / (np.exp(z) + np.exp(-z))
@@ -41,6 +45,7 @@ class Tanh(Activation):
         dLdz = dLdx * dxdz
         return dLdz
 
+
 class Sigmoid(Activation):
     def forward(self, z):
         self.x = 1 / (1 + np.exp(-z))
@@ -50,10 +55,11 @@ class Sigmoid(Activation):
         dLdz = dLdx * self.x * (1 - self.x)
         return dLdz
 
+
 class Softmax(Activation):
     def forward(self, z):
-        exp_z = np.exp(z - np.max(z, axis = 1, keepdims=True))
-        sum_exp_z = np.sum(exp_z, axis = 1, keepdims=True)
+        exp_z = np.exp(z - np.max(z, axis=1, keepdims=True))
+        sum_exp_z = np.sum(exp_z, axis=1, keepdims=True)
         self.x = exp_z / sum_exp_z
         return self.x
 
@@ -68,15 +74,16 @@ class Softmax(Activation):
                     if i == j:
                         J[i, j] = self.x[k, i] * (1 - self.x[k, i])
                     else:
-                        J[i, j] = - self.x[k, i] * self.x[k, j]
+                        J[i, j] = -self.x[k, i] * self.x[k, j]
             dLdz[k, :] = dLdx[k, :] @ J
         return dLdz
 
+
 if __name__ == "__main__":
-    z = np.random.randint(-5,5,(3,4))
+    z = np.random.randint(-5, 5, (3, 4))
     relu = ReLU()
     x = relu.forward(z)
-    dLdx = np.random.randint(0,5,size=x.shape)
+    dLdx = np.random.randint(0, 5, size=x.shape)
     dLdz = relu.backward(dLdx)
     print("z = ", z)
     print("x = ", x)

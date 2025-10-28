@@ -2,6 +2,7 @@ import numpy as np
 from .linear import Linear
 from .batchnorm import BatchNorm1d
 
+
 class SGD:
 
     def __init__(self, model, lr=0.001, momentum=0):
@@ -12,16 +13,26 @@ class SGD:
         self.v_W = []
         self.v_b = []
         # exclude activation layers when updating weights
-        self.layers = [layer for layer in model.layers if isinstance(layer, Linear) or isinstance(layer, BatchNorm1d)]
+        self.layers = [
+            layer
+            for layer in model.layers
+            if isinstance(layer, Linear) or isinstance(layer, BatchNorm1d)
+        ]
         # initialize weights for linear and batchnorm layers
         self.v_W = [
-            np.zeros_like(layer.W) if isinstance(layer, Linear)
-            else np.zeros_like(layer.gamma)
+            (
+                np.zeros_like(layer.W)
+                if isinstance(layer, Linear)
+                else np.zeros_like(layer.gamma)
+            )
             for layer in self.layers
         ]
         self.v_b = [
-            np.zeros_like(layer.b) if isinstance(layer, Linear)
-            else np.zeros_like(layer.beta)
+            (
+                np.zeros_like(layer.b)
+                if isinstance(layer, Linear)
+                else np.zeros_like(layer.beta)
+            )
             for layer in self.layers
         ]
 

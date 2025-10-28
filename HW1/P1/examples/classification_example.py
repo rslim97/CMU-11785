@@ -1,7 +1,8 @@
 import matplotlib.colors
 import sys
-sys.path.append('P1/models')
-sys.path.append('P1/mytorch')
+
+sys.path.append("P1/models")
+sys.path.append("P1/mytorch")
 from model import Model
 from linear import *
 from activation import *
@@ -10,6 +11,7 @@ from sgd import SGD
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
+
 
 class multiClassModel1(Model):
     def __init__(self):
@@ -29,15 +31,12 @@ class multiClassModel1(Model):
             dLdx = self.layers[i].backward(dLdx)
         return dLdx
 
+
 class multiClassModel2(Model):
     def __init__(self):
         super().__init__()
         # init layers, assume a task of classifying 3 classes
-        self.layers = [Linear(2, 32),
-                       ReLU(),
-                       Linear(32, 24),
-                       ReLU(),
-                       Linear(24, 3)]
+        self.layers = [Linear(2, 32), ReLU(), Linear(32, 24), ReLU(), Linear(24, 3)]
 
     def forward(self, x):
         l = len(self.layers)
@@ -56,6 +55,7 @@ class multiClassModel2(Model):
 # The model outputs raw logits, which need to be passed through a Softmax during evaluation
 # to get probabilities.
 
+
 def get_batches(dataset, batch_size):
     x, y = dataset
     N = x.shape[0]
@@ -68,6 +68,7 @@ def get_batches(dataset, batch_size):
 
         batch_index = indices[start:end]
         yield x[batch_index], y[batch_index]
+
 
 def softmax(x):
     exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
@@ -83,16 +84,18 @@ if __name__ == "__main__":
     y_list = []
 
     for i in range(n_classes):
-        """ using 2D data samples for ease of visualization """
+        """using 2D data samples for ease of visualization"""
         # use box-mueller transform to generate normal gaussian distribution
-        u1 = np.random.random(size=(n_samples))  # generate random uniform between 0 and 1
+        u1 = np.random.random(
+            size=(n_samples)
+        )  # generate random uniform between 0 and 1
         u2 = np.random.random(size=(n_samples))
         R = np.sqrt(-2 * np.log(u1))
         theta = 2 * np.pi * u2
         z0 = R * np.cos(theta)
         z1 = R * np.sin(theta)
-        z = np.hstack((z0[..., np.newaxis], z1[...,np.newaxis]))
-        mu = np.random.normal(3 * i * np.random.randn(),5,size=(1, 2))
+        z = np.hstack((z0[..., np.newaxis], z1[..., np.newaxis]))
+        mu = np.random.normal(3 * i * np.random.randn(), 5, size=(1, 2))
         sigma = 2.5
         x_ = sigma * z + mu
         y_ = np.zeros(shape=(n_samples, n_classes))
@@ -160,7 +163,7 @@ if __name__ == "__main__":
         outputs_per_epoch.append(probs)
         losses.append(np.mean(train_batch_loss))
 
-    print("x.shape ",x.shape)
+    print("x.shape ", x.shape)
 
     # # test on a single training data
     # y_test = y[[98]]
@@ -197,28 +200,42 @@ if __name__ == "__main__":
 
     """ Animate """
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 5))
-    ax1.set_aspect('equal')
-    ax2.set_aspect('equal')
+    ax1.set_aspect("equal")
+    ax2.set_aspect("equal")
     step = 10
     frames = list(range(0, n_epochs, step))
+
     # print(out)
     def animate(i):
         ax1.clear()
         ax2.clear()
         ax3.clear()
-        ax1.set_title('Ground truth data')
-        ax2.set_title('two-hidden-layer-MLP prediction\n [2, 32, 24, 3] ')
-        ax3.set_title('Training loss')
-        ax3.text(0.5, 0.5, f"epoch: {i+step}", verticalalignment='center', horizontalalignment='center',
-                 transform=ax3.transAxes)
-        cmap = matplotlib.colormaps['tab10']
+        ax1.set_title("Ground truth data")
+        ax2.set_title("two-hidden-layer-MLP prediction\n [2, 32, 24, 3] ")
+        ax3.set_title("Training loss")
+        ax3.text(
+            0.5,
+            0.5,
+            f"epoch: {i+step}",
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=ax3.transAxes,
+        )
+        cmap = matplotlib.colormaps["tab10"]
         for j in range(len(x_test)):
             # print("y_test[j] ", y_test[j])
             ax1.plot(x_test[j, 0], x_test[j, 1], "o", color=cmap(np.argmax(y_test[j])))
-            ax2.plot(x_test[j, 0], x_test[j, 1], "o", color=cmap(np.argmax(outputs_per_epoch[i][j])))
-            ax3.plot(np.arange(i+step), losses[0:i+step], 'tab:blue')
+            ax2.plot(
+                x_test[j, 0],
+                x_test[j, 1],
+                "o",
+                color=cmap(np.argmax(outputs_per_epoch[i][j])),
+            )
+            ax3.plot(np.arange(i + step), losses[0 : i + step], "tab:blue")
         return []
 
-    ani = FuncAnimation(fig, animate, frames=frames, interval=50, blit=False, repeat=False)
+    ani = FuncAnimation(
+        fig, animate, frames=frames, interval=50, blit=False, repeat=False
+    )
     ani.save("P1/gif/animation2.gif", dpi=300, writer=PillowWriter(fps=15))
     plt.show()

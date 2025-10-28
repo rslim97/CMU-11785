@@ -17,12 +17,10 @@ from .autograder_flags import *
 import torch
 import numpy as np
 
-np.set_printoptions(
-    suppress=True,
-    precision=4)
+np.set_printoptions(suppress=True, precision=4)
 
 
-autograder_version = '3.0.1'
+autograder_version = "3.0.1"
 print("Autograder version: " + str(autograder_version))
 SEED = 0
 np.random.seed(SEED)
@@ -43,21 +41,11 @@ if DEBUG_AND_GRADE_LINEAR:
     print("LINEAR | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    A = np.array([
-        [-4., -3.],
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    A = np.array([[-4.0, -3.0], [-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f")
 
-    W = np.array([
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    W = np.array([[-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f")
 
-    b = np.array([
-        [-1.],
-        [0.],
-        [1.]], dtype="f")
+    b = np.array([[-1.0], [0.0], [1.0]], dtype="f")
 
     linear = Linear(2, 3, debug=True)
     linear.W = W
@@ -66,11 +54,10 @@ if DEBUG_AND_GRADE_LINEAR:
     Z = linear.forward(A)
     print("Z =\n", Z.round(4), sep="")
 
-    dLdZ = np.array([
-        [-4., -3., -2.],
-        [-1., -0., 1.],
-        [2., 3., 4.],
-        [5., 6., 7.]], dtype="f")
+    dLdZ = np.array(
+        [[-4.0, -3.0, -2.0], [-1.0, -0.0, 1.0], [2.0, 3.0, 4.0], [5.0, 6.0, 7.0]],
+        dtype="f",
+    )
 
     dLdA = linear.backward(dLdZ)
 
@@ -87,32 +74,23 @@ if DEBUG_AND_GRADE_LINEAR:
     print("LINEAR | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    Z_solution = np.array([
-        [10., -3., -16.],
-        [4., -1., -6.],
-        [-2., 1., 4.],
-        [-8., 3., 14.]], dtype="f")
+    Z_solution = np.array(
+        [[10.0, -3.0, -16.0], [4.0, -1.0, -6.0], [-2.0, 1.0, 4.0], [-8.0, 3.0, 14.0]],
+        dtype="f",
+    )
 
-    dLdA_solution = np.array([
-        [4., -5.],
-        [4., 4.],
-        [4., 13.],
-        [4., 22.]], dtype="f")
+    dLdA_solution = np.array(
+        [[4.0, -5.0], [4.0, 4.0], [4.0, 13.0], [4.0, 22.0]], dtype="f"
+    )
 
     print("\ndLdA =\n", dLdA_solution, sep="")
 
-    dLdW_solution = np.array([
-        [28., 30.],
-        [24., 30.],
-        [20., 30.]], dtype="f")
-    
+    dLdW_solution = np.array([[28.0, 30.0], [24.0, 30.0], [20.0, 30.0]], dtype="f")
+
     print("\ndLdW =\n", dLdW_solution, sep="")
 
-    dLdb_solution = np.array([
-        [2.],
-        [6.],
-        [10.]], dtype="f")
-    
+    dLdb_solution = np.array([[2.0], [6.0], [10.0]], dtype="f")
+
     print("\ndLdb =\n", dLdb_solution, sep="")
 
     print("\n──────────────────────────────────────────")
@@ -160,22 +138,14 @@ if DEBUG_AND_GRADE_IDENTITY:
     print("IDENTITY | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    Z = np.array([
-        [-4, -3],
-        [-2, -1],
-        [0, 1],
-        [2, 3]], dtype="f")
+    Z = np.array([[-4, -3], [-2, -1], [0, 1], [2, 3]], dtype="f")
 
     identity = Identity()
 
     A = identity.forward(Z)
     print("\nA =\n", A, sep="")
 
-    dLdA = np.array([
-        [-4., -3.],
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    dLdA = np.array([[-4.0, -3.0], [-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f")
     dLdZ = identity.backward(dLdA)
     print("\ndAdZ =\n", dLdZ, sep="")
 
@@ -183,17 +153,13 @@ if DEBUG_AND_GRADE_IDENTITY:
     print("IDENTITY | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    A_solution = np.array([
-        [-4., -3.],
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    A_solution = np.array(
+        [[-4.0, -3.0], [-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f"
+    )
 
-    dLdZ_solution = np.array([
-        [-4., -3.],
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    dLdZ_solution = np.array(
+        [[-4.0, -3.0], [-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f"
+    )
 
     print("\nA =\n", A_solution, sep="")
     print("\ndAdZ =\n", dLdZ_solution, sep="")
@@ -229,22 +195,14 @@ if DEBUG_AND_GRADE_SIGMOID:
     print("SIGMOID | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    Z = np.array([
-        [-4, -3],
-        [-2, -1],
-        [0, 1],
-        [2, 3]], dtype="f")
+    Z = np.array([[-4, -3], [-2, -1], [0, 1], [2, 3]], dtype="f")
 
     sigmoid = Sigmoid()
 
     A = sigmoid.forward(Z)
     print("\nA =\n", A, sep="")
 
-    dLdA = np.array([
-        [-4., -3.],
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    dLdA = np.array([[-4.0, -3.0], [-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f")
     dLdZ = sigmoid.backward(dLdA)
     print("\ndLdZ =\n", dLdZ, sep="")
 
@@ -252,17 +210,13 @@ if DEBUG_AND_GRADE_SIGMOID:
     print("SIGMOID | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    A_solution = np.array([
-        [0.018, 0.0474],
-        [0.1192, 0.2689],
-        [0.5, 0.7311],
-        [0.8808, 0.9526]], dtype="f")
+    A_solution = np.array(
+        [[0.018, 0.0474], [0.1192, 0.2689], [0.5, 0.7311], [0.8808, 0.9526]], dtype="f"
+    )
 
-    dLdZ_solution = np.array([
-        [-0.0707, -0.1355],
-        [-0.21  , -0.1966],
-        [ 0.    ,  0.1966],
-        [ 0.21  ,  0.1355]], dtype="f")
+    dLdZ_solution = np.array(
+        [[-0.0707, -0.1355], [-0.21, -0.1966], [0.0, 0.1966], [0.21, 0.1355]], dtype="f"
+    )
 
     print("\nA =\n", A_solution, sep="")
 
@@ -299,23 +253,34 @@ if DEBUG_AND_GRADE_TANH:
     print("TANH | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    Z = np.array([
-        [-4, -3],
-        [-2, -1],
-        [0, 1],
-        [2, 3]], dtype="f")
+    Z = np.array([[-4, -3], [-2, -1], [0, 1], [2, 3]], dtype="f")
 
     tanh = Tanh()
 
     A = tanh.forward(Z)
     print("\nA =\n", A, sep="")
 
-    dLdA = np.array([
-        [1.0,   1.0,],
-        [3.0,   1.0,],
-        [2.0,   0.0,],
-        [0.0,  -1.0,]], dtype="f")
-
+    dLdA = np.array(
+        [
+            [
+                1.0,
+                1.0,
+            ],
+            [
+                3.0,
+                1.0,
+            ],
+            [
+                2.0,
+                0.0,
+            ],
+            [
+                0.0,
+                -1.0,
+            ],
+        ],
+        dtype="f",
+    )
 
     dLdZ = tanh.backward(dLdA)
     print("\ndLdZ =\n", dLdZ, sep="")
@@ -324,17 +289,20 @@ if DEBUG_AND_GRADE_TANH:
     print("TANH | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    A_solution = np.array([
-        [-0.9993, -0.9951],
-        [-0.964, -0.7616],
-        [0., 0.7616],
-        [0.964, 0.9951]], dtype="f")
+    A_solution = np.array(
+        [[-0.9993, -0.9951], [-0.964, -0.7616], [0.0, 0.7616], [0.964, 0.9951]],
+        dtype="f",
+    )
 
-    dLdZ_solution = np.array([
-        [ 1.300e-03,  9.900e-03],
-        [ 2.121e-01,  4.200e-01],
-        [ 2.000e+00,  0.000e+00],
-        [ 0.000e+00, -9.900e-03]], dtype="f")
+    dLdZ_solution = np.array(
+        [
+            [1.300e-03, 9.900e-03],
+            [2.121e-01, 4.200e-01],
+            [2.000e00, 0.000e00],
+            [0.000e00, -9.900e-03],
+        ],
+        dtype="f",
+    )
 
     print("\nA =\n", A_solution, sep="")
     print("\ndAdZ =\n", dLdZ_solution, sep="")
@@ -370,22 +338,34 @@ if DEBUG_AND_GRADE_RELU:
     print("RELU | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    Z = np.array([
-        [-4, -3],
-        [-2, -1],
-        [0, 1],
-        [2, 3]], dtype="f")
+    Z = np.array([[-4, -3], [-2, -1], [0, 1], [2, 3]], dtype="f")
 
     relu = ReLU()
 
     A = relu.forward(Z)
     print("A =\n", A, sep="")
 
-    dLdA = np.array([
-        [1.0,   1.0,],
-        [3.0,   1.0,],
-        [2.0,   0.0,],
-        [0.0,  -1.0,]], dtype="f")
+    dLdA = np.array(
+        [
+            [
+                1.0,
+                1.0,
+            ],
+            [
+                3.0,
+                1.0,
+            ],
+            [
+                2.0,
+                0.0,
+            ],
+            [
+                0.0,
+                -1.0,
+            ],
+        ],
+        dtype="f",
+    )
     dLdZ = relu.backward(dLdA)
     print("\ndLdZ =\n", dLdZ, sep="")
 
@@ -393,17 +373,11 @@ if DEBUG_AND_GRADE_RELU:
     print("RELU | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    A_solution = np.array([
-        [0., 0.],
-        [0., 0.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    A_solution = np.array([[0.0, 0.0], [0.0, 0.0], [0.0, 1.0], [2.0, 3.0]], dtype="f")
 
-    dLdZ_solution = np.array([
-        [0., 0.],
-        [0., 0.],
-        [0., 0.],
-        [0., -1.]], dtype="f")
+    dLdZ_solution = np.array(
+        [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, -1.0]], dtype="f"
+    )
 
     print("\nA =\n", A_solution, "\n", sep="")
     print("\ndLdZ =\n", dLdZ_solution, "\n", sep="")
@@ -453,10 +427,8 @@ if DEBUG_AND_GRADE_GELU:
     print("\n──────────────────────────────────────────")
     print("GELU | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
-   
-    A_solution = np.array([-0.0455, -0.1543, 0.0, 0.3457, 1.9545])
 
-    
+    A_solution = np.array([-0.0455, -0.1543, 0.0, 0.3457, 1.9545])
 
     dLdZ_solution = np.array([-0.0852, 0.1325, 0, 0.8675, -1.0852])
 
@@ -509,12 +481,20 @@ if DEBUG_AND_GRADE_SOFTMAX:
     print("\n──────────────────────────────────────────")
     print("SOFTMAX | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
-   
-    A_solution = np.array([[0.0289, 0.0    , 0.0039, 0.9566, 0.0106],
-       [0.0126, 0.0563, 0.0928, 0.1529, 0.6855]]) 
 
-    dLdZ_solution = np.array([[ 0.084 , 0.0    ,  0.0153, -0.0877, -0.0116],
-       [ 0.0149,  0.0667,  0.2955,  0.1813, -0.5584]])
+    A_solution = np.array(
+        [
+            [0.0289, 0.0, 0.0039, 0.9566, 0.0106],
+            [0.0126, 0.0563, 0.0928, 0.1529, 0.6855],
+        ]
+    )
+
+    dLdZ_solution = np.array(
+        [
+            [0.084, 0.0, 0.0153, -0.0877, -0.0116],
+            [0.0149, 0.0667, 0.2955, 0.1813, -0.5584],
+        ]
+    )
 
     print("\nA =\n", A_solution, "\n", sep="")
     print("\ndLdZ =\n", dLdZ_solution, "\n", sep="")
@@ -565,7 +545,9 @@ if DEBUG_AND_GRADE_MLP0:
 
         A0 = np.random.randn(4, 2).astype("f")
         W0 = np.random.randn(3, 2).astype("f")
-        b0 = np.random.randn(3, ).astype("f")
+        b0 = np.random.randn(
+            3,
+        ).astype("f")
         A0_tensor = torch.tensor(A0, requires_grad=True)
 
         # Test forward
@@ -583,7 +565,7 @@ if DEBUG_AND_GRADE_MLP0:
         mlp0 = MLP0(debug=True)
 
         if not mlp0.layers[0].W.shape == W0.shape:
-            print ("Incorrect architecture")
+            print("Incorrect architecture")
             TEST_mlp0_Z1 = False
             TEST_mlp0_A1 = False
             break
@@ -592,15 +574,14 @@ if DEBUG_AND_GRADE_MLP0:
         mlp0.layers[0].b = b0.reshape(-1, 1)
         A1_ = mlp0.forward(A0)
         Z1_ = mlp0.Z1
-        
 
         # Compare the student answer with the correct answer
-        if np.allclose(Z1, Z1_, atol=atol_threshold)==False:
-            TEST_mlp0_Z1=False
-            
-        if np.allclose(A1, A1_, atol=atol_threshold)==False:
-            TEST_mlp0_A1=False
-        
+        if np.allclose(Z1, Z1_, atol=atol_threshold) == False:
+            TEST_mlp0_Z1 = False
+
+        if np.allclose(A1, A1_, atol=atol_threshold) == False:
+            TEST_mlp0_A1 = False
+
         if TEST_mlp0_Z1 and TEST_mlp0_A1:
             print("Passed Forward on testcase", i + 1)
         else:
@@ -614,13 +595,14 @@ if DEBUG_AND_GRADE_MLP0:
             print("Correct A1:\n", A1, sep="")
             break
 
-        
         # Test backwards
         # Use torch.linear to get the correct answer
         dLdA1 = np.random.randn(4, 3).astype("f")
-        dLdA1_tensor = torch.tensor(dLdA1) 
-        dA1dZ1 = torch.autograd.grad(A1_tensor, Z1_tensor, grad_outputs=torch.ones_like(A1_tensor))[0].numpy()
-        dLdZ1 = dLdA1*dA1dZ1
+        dLdA1_tensor = torch.tensor(dLdA1)
+        dA1dZ1 = torch.autograd.grad(
+            A1_tensor, Z1_tensor, grad_outputs=torch.ones_like(A1_tensor)
+        )[0].numpy()
+        dLdZ1 = dLdA1 * dA1dZ1
         Z1_tensor.backward(gradient=torch.tensor(dLdZ1))
         dLdA0 = A0_tensor.grad.data.numpy()
         dLdW0 = torch_linear.weight.grad.data.numpy()
@@ -633,21 +615,26 @@ if DEBUG_AND_GRADE_MLP0:
         dLdb0_ = mlp0.layers[0].dLdb
 
         # Compare the student answer with the correct answer
-  
-        if np.allclose(dLdZ1, dLdZ1_, atol=atol_threshold)==False:
-            TEST_mlp0_dLdZ1=False
 
-        if np.allclose(dLdA0, dLdA0_, atol=atol_threshold)==False:
-            TEST_mlp0_dLdA0=False
-            
-        if np.allclose(dLdW0, dLdW0_, atol=atol_threshold)==False:
-            TEST_mlp0_dLdW0=False
-            
-        if np.allclose(dLdb0, dLdb0_, atol=atol_threshold)==False:
-            TEST_mlp0_dLdb0=False
+        if np.allclose(dLdZ1, dLdZ1_, atol=atol_threshold) == False:
+            TEST_mlp0_dLdZ1 = False
 
-        
-        if TEST_mlp0_A1 and TEST_mlp0_dLdA0 and TEST_mlp0_dLdW0 and TEST_mlp0_dLdb0 and TEST_mlp0_dLdZ1:
+        if np.allclose(dLdA0, dLdA0_, atol=atol_threshold) == False:
+            TEST_mlp0_dLdA0 = False
+
+        if np.allclose(dLdW0, dLdW0_, atol=atol_threshold) == False:
+            TEST_mlp0_dLdW0 = False
+
+        if np.allclose(dLdb0, dLdb0_, atol=atol_threshold) == False:
+            TEST_mlp0_dLdb0 = False
+
+        if (
+            TEST_mlp0_A1
+            and TEST_mlp0_dLdA0
+            and TEST_mlp0_dLdW0
+            and TEST_mlp0_dLdb0
+            and TEST_mlp0_dLdZ1
+        ):
             print("Passed Backward on testcase", i + 1)
         else:
             print("Failed Backward on testcase", i + 1)
@@ -685,9 +672,13 @@ if DEBUG_AND_GRADE_MLP1:
 
         A0 = np.random.randn(4, 2).astype("f")
         W0 = np.random.randn(3, 2).astype("f")
-        b0 = np.random.randn(3, ).astype("f")
+        b0 = np.random.randn(
+            3,
+        ).astype("f")
         W1 = np.random.randn(2, 3).astype("f")
-        b1 = np.random.randn(2, ).astype("f")
+        b1 = np.random.randn(
+            2,
+        ).astype("f")
         A0_tensor = torch.tensor(A0, requires_grad=True)
 
         # Use torch.linear to get the correct answer
@@ -712,8 +703,10 @@ if DEBUG_AND_GRADE_MLP1:
         # Use your Linear layer to get the student answer
         mlp1 = MLP1(debug=True)
 
-        if not (mlp1.layers[0].W.shape == W0.shape and mlp1.layers[2].W.shape == W1.shape):
-            print ("Incorrect architecture")
+        if not (
+            mlp1.layers[0].W.shape == W0.shape and mlp1.layers[2].W.shape == W1.shape
+        ):
+            print("Incorrect architecture")
             TEST_mlp1_Z1 = False
             TEST_mlp1_A1 = False
             TEST_mlp1_Z2 = False
@@ -730,17 +723,17 @@ if DEBUG_AND_GRADE_MLP1:
         A1_ = mlp1.A1
 
         # Compare the student answer with the correct answer
-        if np.allclose(Z1, Z1_, atol=atol_threshold)==False:
-            TEST_mlp1_Z1=False
-        
-        if np.allclose(A1, A1_, atol=atol_threshold)==False:
-            TEST_mlp1_A1=False
+        if np.allclose(Z1, Z1_, atol=atol_threshold) == False:
+            TEST_mlp1_Z1 = False
 
-        if np.allclose(Z2, Z2_, atol=atol_threshold)==False:
-            TEST_mlp1_Z2=False
+        if np.allclose(A1, A1_, atol=atol_threshold) == False:
+            TEST_mlp1_A1 = False
 
-        if np.allclose(A2, A2_, atol=atol_threshold)==False:
-            TEST_mlp1_A2=False
+        if np.allclose(Z2, Z2_, atol=atol_threshold) == False:
+            TEST_mlp1_Z2 = False
+
+        if np.allclose(A2, A2_, atol=atol_threshold) == False:
+            TEST_mlp1_A2 = False
 
         if TEST_mlp1_Z1 and TEST_mlp1_A1 and TEST_mlp1_Z2 and TEST_mlp1_A2:
             print("Passed Forward on testcase", i + 1)
@@ -762,7 +755,6 @@ if DEBUG_AND_GRADE_MLP1:
             print("Correct A2:\n", A2, sep="")
             break
 
-
         # Test backwards
         TEST_mlp1_dA2dZ2 = True
         TEST_mlp1_dLdZ2 = True
@@ -777,14 +769,18 @@ if DEBUG_AND_GRADE_MLP1:
         # Use torch.linear to get the correct answer
         dLdA2 = np.random.randn(4, 2).astype("f")
         dLdA2_tensor = torch.tensor(dLdA2)
-        dA2dZ2 = torch.autograd.grad(A2_tensor, Z2_tensor, grad_outputs=torch.ones_like(A2_tensor))[0].numpy()
-        dLdZ2 = dLdA2*dA2dZ2
+        dA2dZ2 = torch.autograd.grad(
+            A2_tensor, Z2_tensor, grad_outputs=torch.ones_like(A2_tensor)
+        )[0].numpy()
+        dLdZ2 = dLdA2 * dA2dZ2
         Z2_tensor.backward(gradient=torch.tensor(dLdZ2), retain_graph=True)
         dLdA1 = A1_tensor_copy.grad.data.numpy()
         dLdW1 = torch_linear1.weight.grad.data.numpy()
         dLdb1 = torch_linear1.bias.grad.data.numpy().reshape(-1, 1)
-        dA1dZ1 = torch.autograd.grad(A1_tensor, Z1_tensor, grad_outputs=torch.ones_like(A1_tensor))[0].numpy()
-        dLdZ1 = dLdA1*dA1dZ1
+        dA1dZ1 = torch.autograd.grad(
+            A1_tensor, Z1_tensor, grad_outputs=torch.ones_like(A1_tensor)
+        )[0].numpy()
+        dLdZ1 = dLdA1 * dA1dZ1
         Z1_tensor.backward(gradient=torch.tensor(dLdZ1), retain_graph=True)
         dLdA0 = A0_tensor.grad.data.numpy()
         dLdW0 = torch_linear0.weight.grad.data.numpy()
@@ -800,28 +796,33 @@ if DEBUG_AND_GRADE_MLP1:
         dLdZ2_ = mlp1.dLdZ2
         dLdW1_ = mlp1.layers[2].dLdW
         dLdb1_ = mlp1.layers[2].dLdb
-        
-        if np.allclose(dLdZ2, dLdZ2_, atol=atol_threshold)==False:
-            TEST_mlp1_dLdZ1=False
 
-        if np.allclose(dLdA1, dLdA1_, atol=atol_threshold)==False:
-            TEST_mlp1_dLdA1=False
+        if np.allclose(dLdZ2, dLdZ2_, atol=atol_threshold) == False:
+            TEST_mlp1_dLdZ1 = False
 
-        if np.allclose(dLdZ1, dLdZ1_, atol=atol_threshold)==False:
-            TEST_mlp1_dLdZ0=False
+        if np.allclose(dLdA1, dLdA1_, atol=atol_threshold) == False:
+            TEST_mlp1_dLdA1 = False
 
-        if np.allclose(dLdA0, dLdA0_, atol=atol_threshold)==False:
-            TEST_mlp1_dLdA0=False
+        if np.allclose(dLdZ1, dLdZ1_, atol=atol_threshold) == False:
+            TEST_mlp1_dLdZ0 = False
 
-        if np.allclose(dLdW0, dLdW0_, atol=atol_threshold)==False:
-            TEST_mlp1_dLdW0=False
+        if np.allclose(dLdA0, dLdA0_, atol=atol_threshold) == False:
+            TEST_mlp1_dLdA0 = False
 
-        if np.allclose(dLdb0, dLdb0_, atol=atol_threshold)==False:
-            TEST_mlp1_dLdb0=False
+        if np.allclose(dLdW0, dLdW0_, atol=atol_threshold) == False:
+            TEST_mlp1_dLdW0 = False
 
+        if np.allclose(dLdb0, dLdb0_, atol=atol_threshold) == False:
+            TEST_mlp1_dLdb0 = False
 
-        if  TEST_mlp1_dLdZ2 and TEST_mlp1_dLdA1 and TEST_mlp1_dLdZ1  \
-            and TEST_mlp1_dLdA0 and TEST_mlp1_dLdW0 and TEST_mlp1_dLdb0:
+        if (
+            TEST_mlp1_dLdZ2
+            and TEST_mlp1_dLdA1
+            and TEST_mlp1_dLdZ1
+            and TEST_mlp1_dLdA0
+            and TEST_mlp1_dLdW0
+            and TEST_mlp1_dLdb0
+        ):
             print("Passed Backward on testcase", i + 1)
         else:
             print("Failed Backward on testcase", i + 1)
@@ -873,15 +874,25 @@ if DEBUG_AND_GRADE_MLP4:
 
         A0 = np.random.randn(4, 2).astype("f")
         W0 = np.random.randn(4, 2).astype("f")
-        b0 = np.random.randn(4, ).astype("f")
+        b0 = np.random.randn(
+            4,
+        ).astype("f")
         W1 = np.random.randn(8, 4).astype("f")
-        b1 = np.random.randn(8, ).astype("f")
+        b1 = np.random.randn(
+            8,
+        ).astype("f")
         W2 = np.random.randn(8, 8).astype("f")
-        b2 = np.random.randn(8, ).astype("f")
+        b2 = np.random.randn(
+            8,
+        ).astype("f")
         W3 = np.random.randn(4, 8).astype("f")
-        b3 = np.random.randn(4, ).astype("f")
+        b3 = np.random.randn(
+            4,
+        ).astype("f")
         W4 = np.random.randn(2, 4).astype("f")
-        b4 = np.random.randn(2, ).astype("f")
+        b4 = np.random.randn(
+            2,
+        ).astype("f")
         A0_tensor = torch.tensor(A0, requires_grad=True)
 
         # Use torch.linear to get the correct answer
@@ -933,9 +944,14 @@ if DEBUG_AND_GRADE_MLP4:
         # Use your Linear layer to get the student answer
         mlp4 = MLP4(debug=True)
 
-        if not (mlp4.layers[0].W.shape == W0.shape and mlp4.layers[2].W.shape == W1.shape and mlp4.layers[4].W.shape == W2.shape
-            and mlp4.layers[6].W.shape == W3.shape and mlp4.layers[8].W.shape == W4.shape):
-            print ("Incorrect architecture")
+        if not (
+            mlp4.layers[0].W.shape == W0.shape
+            and mlp4.layers[2].W.shape == W1.shape
+            and mlp4.layers[4].W.shape == W2.shape
+            and mlp4.layers[6].W.shape == W3.shape
+            and mlp4.layers[8].W.shape == W4.shape
+        ):
+            print("Incorrect architecture")
             TEST_mlp4_Z0 = False
             TEST_mlp4_A1 = False
             TEST_mlp4_Z1 = False
@@ -969,41 +985,50 @@ if DEBUG_AND_GRADE_MLP4:
         Z4_ = mlp4.A[9]
         A4_ = mlp4.A[8]
 
-
         # Compare the student answer with the correct answer
 
-        if np.allclose(Z0, Z0_, atol=atol_threshold)==False:
-            TEST_mlp4_Z0=False
+        if np.allclose(Z0, Z0_, atol=atol_threshold) == False:
+            TEST_mlp4_Z0 = False
 
-        if np.allclose(A1, A1_, atol=atol_threshold)==False:
-            TEST_mlp4_A1=False
+        if np.allclose(A1, A1_, atol=atol_threshold) == False:
+            TEST_mlp4_A1 = False
 
-        if np.allclose(Z1, Z1_, atol=atol_threshold)==False:
-            TEST_mlp4_Z1=False
+        if np.allclose(Z1, Z1_, atol=atol_threshold) == False:
+            TEST_mlp4_Z1 = False
 
-        if np.allclose(A2, A2_, atol=atol_threshold)==False:
-            TEST_mlp4_A2=False
+        if np.allclose(A2, A2_, atol=atol_threshold) == False:
+            TEST_mlp4_A2 = False
 
-        if np.allclose(Z2, Z2_, atol=atol_threshold)==False:
-            TEST_mlp4_Z2=False
+        if np.allclose(Z2, Z2_, atol=atol_threshold) == False:
+            TEST_mlp4_Z2 = False
 
-        if np.allclose(A3, A3_, atol=atol_threshold)==False:
-            TEST_mlp4_A3=False
+        if np.allclose(A3, A3_, atol=atol_threshold) == False:
+            TEST_mlp4_A3 = False
 
-        if np.allclose(Z3, Z3_, atol=atol_threshold)==False:
-            TEST_mlp4_Z3=False
+        if np.allclose(Z3, Z3_, atol=atol_threshold) == False:
+            TEST_mlp4_Z3 = False
 
-        if np.allclose(A4, A4_, atol=atol_threshold)==False:
-            TEST_mlp4_A4=False
+        if np.allclose(A4, A4_, atol=atol_threshold) == False:
+            TEST_mlp4_A4 = False
 
-        if np.allclose(Z4, Z4_, atol=atol_threshold)==False:
-            TEST_mlp4_Z4=False
+        if np.allclose(Z4, Z4_, atol=atol_threshold) == False:
+            TEST_mlp4_Z4 = False
 
-        if np.allclose(A5, A5_, atol=atol_threshold)==False:
-            TEST_mlp4_A5=False
+        if np.allclose(A5, A5_, atol=atol_threshold) == False:
+            TEST_mlp4_A5 = False
 
-        if TEST_mlp4_Z0 and TEST_mlp4_A1 and TEST_mlp4_Z1 and TEST_mlp4_A2 and TEST_mlp4_Z2 \
-            and TEST_mlp4_A3 and TEST_mlp4_Z3 and TEST_mlp4_A4 and TEST_mlp4_Z4 and TEST_mlp4_A5:
+        if (
+            TEST_mlp4_Z0
+            and TEST_mlp4_A1
+            and TEST_mlp4_Z1
+            and TEST_mlp4_A2
+            and TEST_mlp4_Z2
+            and TEST_mlp4_A3
+            and TEST_mlp4_Z3
+            and TEST_mlp4_A4
+            and TEST_mlp4_Z4
+            and TEST_mlp4_A5
+        ):
             print("Passed Forward on testcase", i + 1)
 
         else:
@@ -1046,32 +1071,42 @@ if DEBUG_AND_GRADE_MLP4:
         # Use torch.linear to get the correct answer
         dLdA5 = np.random.randn(4, 2).astype("f")
         dLdA5_tensor = torch.tensor(dLdA5)
-        dA5dZ4 = torch.autograd.grad(A5_tensor, Z4_tensor, grad_outputs=torch.ones_like(A5_tensor))[0].numpy()
-        dLdZ4 = dLdA5*dA5dZ4
+        dA5dZ4 = torch.autograd.grad(
+            A5_tensor, Z4_tensor, grad_outputs=torch.ones_like(A5_tensor)
+        )[0].numpy()
+        dLdZ4 = dLdA5 * dA5dZ4
         Z4_tensor.backward(gradient=torch.tensor(dLdZ4), retain_graph=True)
         dLdA4 = A4_tensor_copy.grad.data.numpy()
         dLdW4 = torch_linear4.weight.grad.data.numpy()
         dLdb4 = torch_linear4.bias.grad.data.numpy().reshape(-1, 1)
-        dA4dZ3 = torch.autograd.grad(A4_tensor, Z3_tensor, grad_outputs=torch.ones_like(A4_tensor))[0].numpy()
-        dLdZ3 = dLdA4*dA4dZ3
+        dA4dZ3 = torch.autograd.grad(
+            A4_tensor, Z3_tensor, grad_outputs=torch.ones_like(A4_tensor)
+        )[0].numpy()
+        dLdZ3 = dLdA4 * dA4dZ3
         Z3_tensor.backward(gradient=torch.tensor(dLdZ3), retain_graph=True)
         dLdA3 = A3_tensor_copy.grad.data.numpy()
         dLdW3 = torch_linear3.weight.grad.data.numpy()
         dLdb3 = torch_linear3.bias.grad.data.numpy().reshape(-1, 1)
-        dA3dZ2 = torch.autograd.grad(A3_tensor, Z2_tensor, grad_outputs=torch.ones_like(A3_tensor))[0].numpy()
-        dLdZ2 = dLdA3*dA3dZ2
+        dA3dZ2 = torch.autograd.grad(
+            A3_tensor, Z2_tensor, grad_outputs=torch.ones_like(A3_tensor)
+        )[0].numpy()
+        dLdZ2 = dLdA3 * dA3dZ2
         Z2_tensor.backward(gradient=torch.tensor(dLdZ2), retain_graph=True)
         dLdA2 = A2_tensor_copy.grad.data.numpy()
         dLdW2 = torch_linear2.weight.grad.data.numpy()
         dLdb2 = torch_linear2.bias.grad.data.numpy().reshape(-1, 1)
-        dA2dZ1 = torch.autograd.grad(A2_tensor, Z1_tensor, grad_outputs=torch.ones_like(A2_tensor))[0].numpy()
-        dLdZ1 = dLdA2*dA2dZ1
+        dA2dZ1 = torch.autograd.grad(
+            A2_tensor, Z1_tensor, grad_outputs=torch.ones_like(A2_tensor)
+        )[0].numpy()
+        dLdZ1 = dLdA2 * dA2dZ1
         Z1_tensor.backward(gradient=torch.tensor(dLdZ1), retain_graph=True)
         dLdA1 = A1_tensor_copy.grad.data.numpy()
         dLdW1 = torch_linear1.weight.grad.data.numpy()
         dLdb1 = torch_linear1.bias.grad.data.numpy().reshape(-1, 1)
-        dA1dZ0 = torch.autograd.grad(A1_tensor, Z0_tensor, grad_outputs=torch.ones_like(A1_tensor))[0].numpy()
-        dLdZ0 = dLdA1*dA1dZ0
+        dA1dZ0 = torch.autograd.grad(
+            A1_tensor, Z0_tensor, grad_outputs=torch.ones_like(A1_tensor)
+        )[0].numpy()
+        dLdZ0 = dLdA1 * dA1dZ0
         Z0_tensor.backward(gradient=torch.tensor(dLdZ0), retain_graph=True)
         dLdA0 = A0_tensor.grad.data.numpy()
         dLdW0 = torch_linear0.weight.grad.data.numpy()
@@ -1079,71 +1114,88 @@ if DEBUG_AND_GRADE_MLP4:
 
         # Use your Linear layer to get the student answer
         mlp4.backward(dLdA5)
-        if np.allclose(dLdZ4, mlp4.dLdA[9], atol=atol_threshold)==False:
-            TEST_mlp4_dLdZ4=False
+        if np.allclose(dLdZ4, mlp4.dLdA[9], atol=atol_threshold) == False:
+            TEST_mlp4_dLdZ4 = False
 
-        if np.allclose(dLdA4, mlp4.dLdA[8], atol=atol_threshold)==False:
-            TEST_mlp4_dLdA4=False
+        if np.allclose(dLdA4, mlp4.dLdA[8], atol=atol_threshold) == False:
+            TEST_mlp4_dLdA4 = False
 
-        if np.allclose(dLdW4, mlp4.layers[8].dLdW, atol=atol_threshold)==False:
-            TEST_mlp4_dLdW4=False
+        if np.allclose(dLdW4, mlp4.layers[8].dLdW, atol=atol_threshold) == False:
+            TEST_mlp4_dLdW4 = False
 
-        if np.allclose(dLdb4, mlp4.layers[8].dLdb, atol=atol_threshold)==False:
-            TEST_mlp4_dLdb4=False
+        if np.allclose(dLdb4, mlp4.layers[8].dLdb, atol=atol_threshold) == False:
+            TEST_mlp4_dLdb4 = False
 
-        if np.allclose(dLdZ3, mlp4.dLdA[7], atol=atol_threshold)==False:
-            TEST_mlp4_dLdZ3=False
+        if np.allclose(dLdZ3, mlp4.dLdA[7], atol=atol_threshold) == False:
+            TEST_mlp4_dLdZ3 = False
 
-        if np.allclose(dLdA3, mlp4.dLdA[6], atol=atol_threshold)==False:
-            TEST_mlp4_dLdA3=False
+        if np.allclose(dLdA3, mlp4.dLdA[6], atol=atol_threshold) == False:
+            TEST_mlp4_dLdA3 = False
 
-        if np.allclose(dLdW3, mlp4.layers[6].dLdW, atol=atol_threshold)==False:
-            TEST_mlp4_dLdW3=False
+        if np.allclose(dLdW3, mlp4.layers[6].dLdW, atol=atol_threshold) == False:
+            TEST_mlp4_dLdW3 = False
 
-        if np.allclose(dLdb3, mlp4.layers[6].dLdb, atol=atol_threshold)==False:
-            TEST_mlp4_dLdb3=False
+        if np.allclose(dLdb3, mlp4.layers[6].dLdb, atol=atol_threshold) == False:
+            TEST_mlp4_dLdb3 = False
 
-        if np.allclose(dLdZ2, mlp4.dLdA[5], atol=atol_threshold)==False:
-            TEST_mlp4_dLdZ2=False
+        if np.allclose(dLdZ2, mlp4.dLdA[5], atol=atol_threshold) == False:
+            TEST_mlp4_dLdZ2 = False
 
-        if np.allclose(dLdA2, mlp4.dLdA[4], atol=atol_threshold)==False:
-            TEST_mlp4_dLdA2=False
+        if np.allclose(dLdA2, mlp4.dLdA[4], atol=atol_threshold) == False:
+            TEST_mlp4_dLdA2 = False
 
-        if np.allclose(dLdW2, mlp4.layers[4].dLdW, atol=atol_threshold)==False:
-            TEST_mlp4_dLdW2=False
+        if np.allclose(dLdW2, mlp4.layers[4].dLdW, atol=atol_threshold) == False:
+            TEST_mlp4_dLdW2 = False
 
-        if np.allclose(dLdb2, mlp4.layers[4].dLdb, atol=atol_threshold)==False:
-            TEST_mlp4_dLdb2=False
+        if np.allclose(dLdb2, mlp4.layers[4].dLdb, atol=atol_threshold) == False:
+            TEST_mlp4_dLdb2 = False
 
-        if np.allclose(dLdZ1, mlp4.dLdA[3], atol=atol_threshold)==False:
-            TEST_mlp4_dLdZ1=False
+        if np.allclose(dLdZ1, mlp4.dLdA[3], atol=atol_threshold) == False:
+            TEST_mlp4_dLdZ1 = False
 
-        if np.allclose(dLdA1, mlp4.dLdA[2], atol=atol_threshold)==False:
-            TEST_mlp4_dLdA1=False
+        if np.allclose(dLdA1, mlp4.dLdA[2], atol=atol_threshold) == False:
+            TEST_mlp4_dLdA1 = False
 
-        if np.allclose(dLdW1, mlp4.layers[2].dLdW, atol=atol_threshold)==False:
-            TEST_mlp4_dLdW1=False
+        if np.allclose(dLdW1, mlp4.layers[2].dLdW, atol=atol_threshold) == False:
+            TEST_mlp4_dLdW1 = False
 
-        if np.allclose(dLdb1, mlp4.layers[2].dLdb, atol=atol_threshold)==False:
-            TEST_mlp4_dLdb1=False
+        if np.allclose(dLdb1, mlp4.layers[2].dLdb, atol=atol_threshold) == False:
+            TEST_mlp4_dLdb1 = False
 
-        if np.allclose(dLdZ0, mlp4.dLdA[1], atol=atol_threshold)==False:
-            TEST_mlp4_dLdZ0=False
+        if np.allclose(dLdZ0, mlp4.dLdA[1], atol=atol_threshold) == False:
+            TEST_mlp4_dLdZ0 = False
 
-        if np.allclose(dLdA0, mlp4.dLdA[0], atol=atol_threshold)==False:
-            TEST_mlp4_dLdA0=False
+        if np.allclose(dLdA0, mlp4.dLdA[0], atol=atol_threshold) == False:
+            TEST_mlp4_dLdA0 = False
 
-        if np.allclose(dLdW0, mlp4.layers[0].dLdW, atol=atol_threshold)==False:
-            TEST_mlp4_dLdW0=False
+        if np.allclose(dLdW0, mlp4.layers[0].dLdW, atol=atol_threshold) == False:
+            TEST_mlp4_dLdW0 = False
 
-        if np.allclose(dLdb0, mlp4.layers[0].dLdb, atol=atol_threshold)==False:
-            TEST_mlp4_dLdb0=False
+        if np.allclose(dLdb0, mlp4.layers[0].dLdb, atol=atol_threshold) == False:
+            TEST_mlp4_dLdb0 = False
 
-        if  TEST_mlp4_dLdZ0 and TEST_mlp4_dLdA0 and TEST_mlp4_dLdW0 and TEST_mlp4_dLdb0 \
-            and TEST_mlp4_dLdZ1 and TEST_mlp4_dLdA1 and TEST_mlp4_dLdW1 and TEST_mlp4_dLdb1 \
-            and TEST_mlp4_dLdZ2 and TEST_mlp4_dLdA2 and TEST_mlp4_dLdW2 and TEST_mlp4_dLdb2 \
-            and TEST_mlp4_dLdZ3 and TEST_mlp4_dLdA3 and TEST_mlp4_dLdW3 and TEST_mlp4_dLdb3 \
-            and TEST_mlp4_dLdZ4 and TEST_mlp4_dLdA4 and TEST_mlp4_dLdW4 and TEST_mlp4_dLdb4:
+        if (
+            TEST_mlp4_dLdZ0
+            and TEST_mlp4_dLdA0
+            and TEST_mlp4_dLdW0
+            and TEST_mlp4_dLdb0
+            and TEST_mlp4_dLdZ1
+            and TEST_mlp4_dLdA1
+            and TEST_mlp4_dLdW1
+            and TEST_mlp4_dLdb1
+            and TEST_mlp4_dLdZ2
+            and TEST_mlp4_dLdA2
+            and TEST_mlp4_dLdW2
+            and TEST_mlp4_dLdb2
+            and TEST_mlp4_dLdZ3
+            and TEST_mlp4_dLdA3
+            and TEST_mlp4_dLdW3
+            and TEST_mlp4_dLdb3
+            and TEST_mlp4_dLdZ4
+            and TEST_mlp4_dLdA4
+            and TEST_mlp4_dLdW4
+            and TEST_mlp4_dLdb4
+        ):
             print("Passed Backward on testcase", i + 1)
 
         else:
@@ -1197,7 +1249,6 @@ else:
     TEST_mlp4_dLdb4 = False
 
 
-
 """
 ────────────────────────────────────────────────────────────────────────────────────
 # Loss
@@ -1218,17 +1269,9 @@ if DEBUG_AND_GRADE_MSELOSS:
     print("MSELoss | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    A = np.array([
-        [-4., -3.],
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    A = np.array([[-4.0, -3.0], [-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f")
 
-    Y = np.array([
-        [0., 1.],
-        [1., 0.],
-        [1., 0.],
-        [0., 1.]], dtype="f")
+    Y = np.array([[0.0, 1.0], [1.0, 0.0], [1.0, 0.0], [0.0, 1.0]], dtype="f")
 
     mse = MSELoss()
 
@@ -1244,11 +1287,12 @@ if DEBUG_AND_GRADE_MSELOSS:
 
     L_solution = np.array(6.5, dtype="f")
 
-    dLdA_solution = np.array([
-        [-0.5, -0.5],
-        [-0.375, -0.125],
-        [-0.125, 0.125],
-        [0.25, 0.25]], dtype="f")*2
+    dLdA_solution = (
+        np.array(
+            [[-0.5, -0.5], [-0.375, -0.125], [-0.125, 0.125], [0.25, 0.25]], dtype="f"
+        )
+        * 2
+    )
 
     print("\nL =\n", L_solution, "\n", sep="")
     print("\ndLdA =\n", dLdA_solution, "\n", sep="")
@@ -1284,17 +1328,9 @@ if DEBUG_AND_GRADE_CROSSENTROPYLOSS:
     print("CROSSENTROPYLOSS | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    A = np.array([
-        [-4., -3.],
-        [-2., -1.],
-        [0., 1.],
-        [2., 3.]], dtype="f")
+    A = np.array([[-4.0, -3.0], [-2.0, -1.0], [0.0, 1.0], [2.0, 3.0]], dtype="f")
 
-    Y = np.array([
-        [0., 1.],
-        [1., 0.],
-        [1., 0.],
-        [0., 1.]], dtype="f")
+    Y = np.array([[0.0, 1.0], [1.0, 0.0], [1.0, 0.0], [0.0, 1.0]], dtype="f")
 
     xent = CrossEntropyLoss()
 
@@ -1310,11 +1346,18 @@ if DEBUG_AND_GRADE_CROSSENTROPYLOSS:
 
     L_solution = np.array(0.8133, dtype="f")
 
-    dLdA_solution = np.array([
-        [0.2689, -0.2689],
-        [-0.7311, 0.7311],
-        [-0.7311, 0.7311],
-        [0.2689, -0.2689]], dtype="f")/4
+    dLdA_solution = (
+        np.array(
+            [
+                [0.2689, -0.2689],
+                [-0.7311, 0.7311],
+                [-0.7311, 0.7311],
+                [0.2689, -0.2689],
+            ],
+            dtype="f",
+        )
+        / 4
+    )
 
     print("\nL =\n", L_solution, sep="")
 
@@ -1329,7 +1372,9 @@ if DEBUG_AND_GRADE_CROSSENTROPYLOSS:
     TEST_crossentropyloss_L = np.allclose(L.round(4), L_solution, atol=atol_threshold)
     print("Test L:   ", TEST_crossentropyloss_L)
 
-    TEST_crossentropyloss_dLdA = np.allclose(dLdA.round(4), dLdA_solution, atol=atol_threshold)
+    TEST_crossentropyloss_dLdA = np.allclose(
+        dLdA.round(4), dLdA_solution, atol=atol_threshold
+    )
     print("Test dLdA:", TEST_crossentropyloss_dLdA)
 
 else:
@@ -1399,25 +1444,13 @@ if DEBUG_AND_GRADE_SGD:
     print("SGD | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    W_1_solution = np.array([
-        [0.91, 0.91],
-        [0.91, 0.91],
-        [0.91, 0.91]], dtype="f")
+    W_1_solution = np.array([[0.91, 0.91], [0.91, 0.91], [0.91, 0.91]], dtype="f")
 
-    b_1_solution = np.array([
-        [0.91],
-        [0.91],
-        [0.91]], dtype="f")
+    b_1_solution = np.array([[0.91], [0.91], [0.91]], dtype="f")
 
-    W_2_solution = np.array([
-        [0.82, 0.82],
-        [0.82, 0.82],
-        [0.82, 0.82]], dtype="f")
+    W_2_solution = np.array([[0.82, 0.82], [0.82, 0.82], [0.82, 0.82]], dtype="f")
 
-    b_2_solution = np.array([
-        [0.82],
-        [0.82],
-        [0.82]], dtype="f")
+    b_2_solution = np.array([[0.82], [0.82], [0.82]], dtype="f")
 
     print("\nParameters After SGD (Step=1)\n")
 
@@ -1515,25 +1548,13 @@ if DEBUG_AND_GRADE_SGD_M:
     print("SGD with Momentum | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    W_1_solution = np.array([
-        [0.91, 0.91],
-        [0.91, 0.91],
-        [0.91, 0.91]], dtype="f")
+    W_1_solution = np.array([[0.91, 0.91], [0.91, 0.91], [0.91, 0.91]], dtype="f")
 
-    b_1_solution = np.array([
-        [0.91],
-        [0.91],
-        [0.91]], dtype="f")
+    b_1_solution = np.array([[0.91], [0.91], [0.91]], dtype="f")
 
-    W_2_solution = np.array([
-        [0.739, 0.739],
-        [0.739, 0.739],
-        [0.739, 0.739]], dtype="f")
+    W_2_solution = np.array([[0.739, 0.739], [0.739, 0.739], [0.739, 0.739]], dtype="f")
 
-    b_2_solution = np.array([
-        [0.739],
-        [0.739],
-        [0.739]], dtype="f")
+    b_2_solution = np.array([[0.739], [0.739], [0.739]], dtype="f")
 
     print("\nParameters After SGD (Step=1)\n")
 
@@ -1585,17 +1606,11 @@ if DEBUG_AND_GRADE_BATCHNORM:
     print("BATCHNORM FORWARD (Eval) | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    A = np.array([
-        [1., 4.],
-        [7., 0.],
-        [1., 0.],
-        [7., 4.]], dtype="f")
+    A = np.array([[1.0, 4.0], [7.0, 0.0], [1.0, 0.0], [7.0, 4.0]], dtype="f")
 
-    gamma = np.array([
-        [2., 5.]], dtype="f")
+    gamma = np.array([[2.0, 5.0]], dtype="f")
 
-    beta = np.array([
-        [-1., 2.]], dtype="f")
+    beta = np.array([[-1.0, 2.0]], dtype="f")
 
     bn = BatchNorm1d(2)
     bn.gamma = gamma
@@ -1608,11 +1623,9 @@ if DEBUG_AND_GRADE_BATCHNORM:
     print("BATCHNORM FORWARD (Eval) | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    BZ_solution = np.array([
-        [1., 22.],
-        [13., 2.],
-        [1., 2.],
-        [13., 22.]], dtype="f")
+    BZ_solution = np.array(
+        [[1.0, 22.0], [13.0, 2.0], [1.0, 2.0], [13.0, 22.0]], dtype="f"
+    )
 
     print("\n(eval) BZ =\n", BZ_solution, "\n", sep="")
 
@@ -1644,11 +1657,7 @@ if DEBUG_AND_GRADE_BATCHNORM:
     print("BATCHNORM FORWARD (Train) | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    BZ_solution = np.array([
-        [-3., 7.],
-        [1., -3.],
-        [-3., -3.],
-        [1., 7.]])
+    BZ_solution = np.array([[-3.0, 7.0], [1.0, -3.0], [-3.0, -3.0], [1.0, 7.0]])
 
     print("\n(train) BZ =\n", BZ_solution, "\n", sep="")
 
@@ -1669,11 +1678,7 @@ if DEBUG_AND_GRADE_BATCHNORM:
     print("BATCHNORM BACKWARD | STUDENT OUTPUT")
     print("──────────────────────────────────────────")
 
-    dLdA = np.array([
-        [-6., 2.],
-        [-12., 16.],
-        [-12., 20.],
-        [-6., 2.]], dtype="f")
+    dLdA = np.array([[-6.0, 2.0], [-12.0, 16.0], [-12.0, 20.0], [-6.0, 2.0]], dtype="f")
 
     dLdZ = bn.backward(dLdA)
     print("\ndLdZ =\n", dLdZ, sep="")
@@ -1682,11 +1687,9 @@ if DEBUG_AND_GRADE_BATCHNORM:
     print("BATCHNORM BACKWARD | SOLUTION OUTPUT")
     print("──────────────────────────────────────────")
 
-    dLdZ_solution = np.array([
-        [2., 0.],
-        [-2., -5.],
-        [-2., 5.],
-        [2., 0.]], dtype="f")
+    dLdZ_solution = np.array(
+        [[2.0, 0.0], [-2.0, -5.0], [-2.0, 5.0], [2.0, 0.0]], dtype="f"
+    )
 
     print("\ndLdZ =\n", dLdZ_solution, "\n", sep="")
 
@@ -1709,93 +1712,92 @@ else:
 """
 
 TEST_activations = (
-    TEST_identity_A and
-    TEST_identity_dLdZ and
-    TEST_sigmoid_A and
-    TEST_sigmoid_dLdZ and
-    TEST_tanh_A and
-    TEST_tanh_dLdZ and
-    TEST_relu_A and
-    TEST_relu_dLdZ and
+    TEST_identity_A
+    and TEST_identity_dLdZ
+    and TEST_sigmoid_A
+    and TEST_sigmoid_dLdZ
+    and TEST_tanh_A
+    and TEST_tanh_dLdZ
+    and TEST_relu_A
+    and TEST_relu_dLdZ
+    and
     # TEST_gelu_A and
     # TEST_gelu_dLdZ and
-    TEST_softmax_A and
-    TEST_softmax_dLdZ)
+    TEST_softmax_A
+    and TEST_softmax_dLdZ
+)
 
 TEST_loss = (
-    TEST_mseloss_L and
-    TEST_mseloss_dLdA and
-    TEST_crossentropyloss_L and
-    TEST_crossentropyloss_dLdA)
+    TEST_mseloss_L
+    and TEST_mseloss_dLdA
+    and TEST_crossentropyloss_L
+    and TEST_crossentropyloss_dLdA
+)
 
 TEST_linear = (
-    TEST_linear_Z and
-    TEST_linear_dLdA and
-    TEST_linear_dLdW and
-    TEST_linear_dLdb)
+    TEST_linear_Z and TEST_linear_dLdA and TEST_linear_dLdW and TEST_linear_dLdb
+)
 
-TEST_sgd = (
-    TEST_sgd_W_m_1 and
-    TEST_sgd_b_m_1 and
-    TEST_sgd_W_m_2 and
-    TEST_sgd_b_m_2)
+TEST_sgd = TEST_sgd_W_m_1 and TEST_sgd_b_m_1 and TEST_sgd_W_m_2 and TEST_sgd_b_m_2
 
 TEST_mlp0 = (
-    TEST_mlp0_Z1 and
-    TEST_mlp0_A1 and
-    TEST_mlp0_dLdZ1 and
-    TEST_mlp0_dLdA0 and
-    TEST_mlp0_dLdW0 and
-    TEST_mlp0_dLdb0)
+    TEST_mlp0_Z1
+    and TEST_mlp0_A1
+    and TEST_mlp0_dLdZ1
+    and TEST_mlp0_dLdA0
+    and TEST_mlp0_dLdW0
+    and TEST_mlp0_dLdb0
+)
 
 TEST_mlp1 = (
-    TEST_mlp1_Z1 and
-    TEST_mlp1_A1 and
-    TEST_mlp1_Z2 and
-    TEST_mlp1_A2 and
-    TEST_mlp1_dLdZ2 and
-    TEST_mlp1_dLdA1 and
-    TEST_mlp1_dLdZ1 and
-    TEST_mlp1_dLdA0 and
-    TEST_mlp1_dLdW0 and
-    TEST_mlp1_dLdb0)
+    TEST_mlp1_Z1
+    and TEST_mlp1_A1
+    and TEST_mlp1_Z2
+    and TEST_mlp1_A2
+    and TEST_mlp1_dLdZ2
+    and TEST_mlp1_dLdA1
+    and TEST_mlp1_dLdZ1
+    and TEST_mlp1_dLdA0
+    and TEST_mlp1_dLdW0
+    and TEST_mlp1_dLdb0
+)
 
 TEST_mlp4 = (
-    TEST_mlp4_Z0 and
-    TEST_mlp4_A1 and
-    TEST_mlp4_Z1 and
-    TEST_mlp4_A2 and
-    TEST_mlp4_Z2 and
-    TEST_mlp4_A3 and
-    TEST_mlp4_Z3 and
-    TEST_mlp4_A4 and
-    TEST_mlp4_Z4 and
-    TEST_mlp4_A5 and
-    TEST_mlp4_dLdZ0 and
-    TEST_mlp4_dLdA0 and
-    TEST_mlp4_dLdW0 and
-    TEST_mlp4_dLdb0 and
-    TEST_mlp4_dLdZ1 and
-    TEST_mlp4_dLdA1 and
-    TEST_mlp4_dLdW1 and
-    TEST_mlp4_dLdb1 and
-    TEST_mlp4_dLdZ2 and
-    TEST_mlp4_dLdA2 and
-    TEST_mlp4_dLdW2 and
-    TEST_mlp4_dLdb2 and
-    TEST_mlp4_dLdZ3 and
-    TEST_mlp4_dLdA3 and
-    TEST_mlp4_dLdW3 and
-    TEST_mlp4_dLdb3 and
-    TEST_mlp4_dLdZ4 and
-    TEST_mlp4_dLdA4 and
-    TEST_mlp4_dLdW4 and
-    TEST_mlp4_dLdb4)
+    TEST_mlp4_Z0
+    and TEST_mlp4_A1
+    and TEST_mlp4_Z1
+    and TEST_mlp4_A2
+    and TEST_mlp4_Z2
+    and TEST_mlp4_A3
+    and TEST_mlp4_Z3
+    and TEST_mlp4_A4
+    and TEST_mlp4_Z4
+    and TEST_mlp4_A5
+    and TEST_mlp4_dLdZ0
+    and TEST_mlp4_dLdA0
+    and TEST_mlp4_dLdW0
+    and TEST_mlp4_dLdb0
+    and TEST_mlp4_dLdZ1
+    and TEST_mlp4_dLdA1
+    and TEST_mlp4_dLdW1
+    and TEST_mlp4_dLdb1
+    and TEST_mlp4_dLdZ2
+    and TEST_mlp4_dLdA2
+    and TEST_mlp4_dLdW2
+    and TEST_mlp4_dLdb2
+    and TEST_mlp4_dLdZ3
+    and TEST_mlp4_dLdA3
+    and TEST_mlp4_dLdW3
+    and TEST_mlp4_dLdb3
+    and TEST_mlp4_dLdZ4
+    and TEST_mlp4_dLdA4
+    and TEST_mlp4_dLdW4
+    and TEST_mlp4_dLdb4
+)
 
 TEST_batchnorm = (
-    TEST_batchnorm_eval_BZ and
-    TEST_batchnorm_train_BZ and
-    TEST_batchnorm_dLdZ)
+    TEST_batchnorm_eval_BZ and TEST_batchnorm_train_BZ and TEST_batchnorm_dLdZ
+)
 
 SCORE_LOGS = {
     "Linear Layer": 15 * int(TEST_linear),
@@ -1805,7 +1807,7 @@ SCORE_LOGS = {
     "MLP4": 15 * int(TEST_mlp4),
     "Loss": 10 * int(TEST_loss),
     "SGD": 10 * int(TEST_sgd),
-    "Batch Norm": 20 * int(TEST_batchnorm)
+    "Batch Norm": 20 * int(TEST_batchnorm),
 }
 
 
@@ -1833,4 +1835,4 @@ print("\n")
 ────────────────────────────────────────────────────────────────────────────────────
 """
 
-print(json.dumps({'scores': SCORE_LOGS}))
+print(json.dumps({"scores": SCORE_LOGS}))

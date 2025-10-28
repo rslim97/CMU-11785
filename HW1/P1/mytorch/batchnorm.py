@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class BatchNorm1d:
 
     def __init__(self, num_features, alpha=0.9):
@@ -34,11 +35,15 @@ class BatchNorm1d:
             self.ZB = self.ZN * (ones @ self.gamma) + ones @ self.beta
 
             self.running_mu = self.alpha * self.running_mu + (1 - self.alpha) * self.mu
-            self.running_var = self.alpha * self.running_var + (1 - self.alpha) * self.var
+            self.running_var = (
+                self.alpha * self.running_var + (1 - self.alpha) * self.var
+            )
 
         else:
             # inference mode
-            self.ZN = (Z - ones @ self.running_mu) / (ones @ np.sqrt(self.running_var + self.eps))
+            self.ZN = (Z - ones @ self.running_mu) / (
+                ones @ np.sqrt(self.running_var + self.eps)
+            )
             self.ZB = self.ZN * (ones @ self.gamma) + ones @ self.beta
 
         return self.ZB
@@ -54,7 +59,11 @@ class BatchNorm1d:
         dZNdmu = -1 / np.sqrt(ones @ self.var + self.eps)
         dLdmu = ones.T @ (dLdZN * dZNdmu)
 
-        dZNdvar = -0.5 * (self.Z - ones @ self.mu) * np.power(ones @ self.var + self.eps, -1.5)
+        dZNdvar = (
+            -0.5
+            * (self.Z - ones @ self.mu)
+            * np.power(ones @ self.var + self.eps, -1.5)
+        )
         dLdvar = ones.T @ (dLdZN * dZNdvar)
 
         dZNdZ = ones @ (1 / np.sqrt(self.var + self.eps))
@@ -64,5 +73,5 @@ class BatchNorm1d:
         term2 = (ones @ dLdmu) * dmudZ
         term3 = (ones @ dLdvar) * dvardZ
 
-        dLdZ = term1 + term2 +term3
+        dLdZ = term1 + term2 + term3
         return dLdZ
