@@ -1,14 +1,19 @@
 import numpy as np
 from .resampling import *
 
+
 def f1(C_out, C_in, K):
     return np.random.randint(0, 5, size=(C_out, C_in, K))
+
 
 def f2(C_out):
     return np.random.randint(0, 3, size=(C_out, 1))
 
+
 class Conv1d_stride1:
-    def __init__(self, in_channels, out_channels, kernel_size, weight_init_fn, bias_init_fn):
+    def __init__(
+        self, in_channels, out_channels, kernel_size, weight_init_fn, bias_init_fn
+    ):
         self.C_in = in_channels
         self.C_out = out_channels
         self.K = kernel_size
@@ -30,7 +35,9 @@ class Conv1d_stride1:
         W_out = (W_in - self.K) + 1
         z = np.empty(shape=(N, self.C_out, W_out), dtype=np.float64)
         for i in range(W_out):
-            z[:, :, i] = np.tensordot(x[:, :, i:i + self.K], self.W, axes=((1, 2), (1, 2))) + self.b.reshape(-1)
+            z[:, :, i] = np.tensordot(
+                x[:, :, i : i + self.K], self.W, axes=((1, 2), (1, 2))
+            ) + self.b.reshape(-1)
         return z
 
     def backward(self, dLdz):
@@ -47,7 +54,9 @@ class Conv1d_stride1:
         #         self.dLdW[i, :, j] = np.tensordot(self.x[:, :, j:j+W_out], dLdz[:, i:i+1, :],
         #                                           axes=((0,2),(0,2))).reshape(-1)
         for i in range(self.K):
-            self.dLdW[:, :, i] = np.tensordot(self.x[:, :, i:i+W_out], dLdz, axes=((0, 2), (0, 2))).transpose(1, 0)
+            self.dLdW[:, :, i] = np.tensordot(
+                self.x[:, :, i : i + W_out], dLdz, axes=((0, 2), (0, 2))
+            ).transpose(1, 0)
 
         # find dLdb
         self.dLdb = np.sum(dLdz, axis=(0, 2))
@@ -56,7 +65,9 @@ class Conv1d_stride1:
         # pad dLdz with K-1 zeros left and right
         # dLdz size: before: W_in-K+1, after: W_in-K+1+2(K-1) = W_in+K-1
         # i.e. to get back original input size, W_in, after convolving dLdz with 180^o rotated kernel as filter.
-        dLdz = np.pad(dLdz, pad_width=((0, 0), (0, 0), (self.K - 1, self.K - 1)), mode='constant')
+        dLdz = np.pad(
+            dLdz, pad_width=((0, 0), (0, 0), (self.K - 1, self.K - 1)), mode="constant"
+        )
 
         # for i in range(C_out):
         #     # Convolve dLdz with 180^o rotated kernel as filter.
@@ -66,25 +77,41 @@ class Conv1d_stride1:
         #                                                                           axis=2), axes=((1,2),(0,2)))
 
         for i in range(W_in):
-            dLdx[:, :, i] = np.tensordot(dLdz[:, :, i:i+self.K], np.flip(self.W, axis=2),
-                                         axes=((1, 2), (0, 2)))
+            dLdx[:, :, i] = np.tensordot(
+                dLdz[:, :, i : i + self.K],
+                np.flip(self.W, axis=2),
+                axes=((1, 2), (0, 2)),
+            )
         return dLdx
 
+
 class Conv1d:
-    def __init__(self, in_channels, out_channels, kernel_size, stride, padding=0,
-                 weight_init_fn=None, bias_init_fn=None):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride,
+        padding=0,
+        weight_init_fn=None,
+        bias_init_fn=None,
+    ):
 
         self.stride = stride
         self.padding = padding
         self.C_in = in_channels
         self.C_out = out_channels
         self.K = kernel_size
-        self.conv1d_stride1 = Conv1d_stride1(self.C_in, self.C_out, self.K, weight_init_fn, bias_init_fn)
+        self.conv1d_stride1 = Conv1d_stride1(
+            self.C_in, self.C_out, self.K, weight_init_fn, bias_init_fn
+        )
         self.downsampled1d = Downsample1d(downsampling_factor=stride)
 
     def forward(self, x):
         # pad with zeros
-        x = np.pad(x, pad_width=((0, 0),(0, 0),(self.padding, self.padding)), mode='constant')
+        x = np.pad(
+            x, pad_width=((0, 0), (0, 0), (self.padding, self.padding)), mode="constant"
+        )
         # Conv1d forward
         z = self.conv1d_stride1.forward(x)
         # Downsample1d forward
@@ -97,10 +124,9 @@ class Conv1d:
         # Conv1d backward
         dLdx = self.conv1d_stride1.backward(dLdx)
         # unpad zeros
-        if self.padding>0:
-            dLdx = dLdx[:, :, self.padding:-self.padding]
+        if self.padding > 0:
+            dLdx = dLdx[:, :, self.padding : -self.padding]
         return dLdx
-
 
 
 if __name__ == "__main__":
@@ -111,7 +137,9 @@ if __name__ == "__main__":
     W_in = 5
 
     conv1d_stride1 = Conv1d_stride1(C_in, C_out, K, f1, f2)
-    conv1d = Conv1d(C_in, C_out, K, stride=2, padding=0, weight_init_fn=f1, bias_init_fn=f2)
+    conv1d = Conv1d(
+        C_in, C_out, K, stride=2, padding=0, weight_init_fn=f1, bias_init_fn=f2
+    )
 
     # forward
     x = np.random.randint(0, 10, size=(N, C_in, W_in))
@@ -123,6 +151,6 @@ if __name__ == "__main__":
 
     # print(h)
     print("x.shape", x.shape)
-    print("z.shape ",z.shape)
+    print("z.shape ", z.shape)
     print("dLdx.shape ", dLdx.shape)
     print("dLdZ.shape", dLdz.shape)

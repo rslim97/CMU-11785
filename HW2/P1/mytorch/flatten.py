@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Flatten:
     def forward(self, x):
         self.x = x

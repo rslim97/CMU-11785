@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Linear:
 
     def __init__(self, in_features, out_features):
@@ -39,6 +40,7 @@ class Linear:
         self.dLdb = dLdb
         print("")
         return dLdx
+
 
 if __name__ == "__main__":
     lin = Linear(3, 2)

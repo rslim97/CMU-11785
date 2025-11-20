@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Loss:
     def __init__(self):
         self.x = None
@@ -11,6 +12,7 @@ class Loss:
 
     def backward(self):
         raise NotImplementedError()
+
 
 class MSELoss(Loss):
     def forward(self, x, y):
@@ -31,6 +33,7 @@ class MSELoss(Loss):
         # print("dLdx", dLdx)
         return dLdx
 
+
 class CrossEntropyLoss(Loss):
     def forward(self, x, y):
         self.y = y
@@ -38,7 +41,7 @@ class CrossEntropyLoss(Loss):
         sum_exp_x = np.sum(exp_x, axis=1, keepdims=True)
         self.x = exp_x / sum_exp_x
         N = x.shape[0]
-        cross_entropy = np.sum(- y * np.log(self.x), axis=1)
+        cross_entropy = np.sum(-y * np.log(self.x), axis=1)
         sum_cross_entropy = np.sum(cross_entropy, axis=0)
         mean_cross_entropy = sum_cross_entropy / N
         return mean_cross_entropy
@@ -48,9 +51,10 @@ class CrossEntropyLoss(Loss):
         dLdx = (self.x - self.y) / N
         return dLdx
 
+
 if __name__ == "__main__":
-    x = np.random.randint(0,5, size=(2,5))
-    y = np.random.randint(0,5, size=(2,5))
+    x = np.random.randint(0, 5, size=(2, 5))
+    y = np.random.randint(0, 5, size=(2, 5))
     mseloss = MSELoss()
     L = mseloss.forward(x, y)
     dLdxN = mseloss.backward()
@@ -61,7 +65,7 @@ if __name__ == "__main__":
     print("dLdxN", dLdxN)
     print("")
 
-    x = np.zeros(shape=(2,5))
+    x = np.zeros(shape=(2, 5))
     y = np.zeros_like(x)
     y[0, 2] = 1
     y[1, 1] = 1

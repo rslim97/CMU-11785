@@ -7,10 +7,18 @@ from .Conv2d import *
 Tranpose convolution is also called fractionally strided convolution.
 """
 
+
 class ConvTranspose1d:
 
-    def __init__(self, in_channels, out_channels, kernel_size, upsampling_factor,
-                 weight_init_fn, bias_init_fn):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        upsampling_factor,
+        weight_init_fn,
+        bias_init_fn,
+    ):
 
         self.K = kernel_size
         self.S = upsampling_factor  # factor S
@@ -18,7 +26,9 @@ class ConvTranspose1d:
         self.C_out = out_channels
 
         self.upsampling1d = Upsample1d(upsampling_factor=upsampling_factor)
-        self.conv1d_stride1 = Conv1d_stride1(in_channels, out_channels, kernel_size, weight_init_fn, bias_init_fn)
+        self.conv1d_stride1 = Conv1d_stride1(
+            in_channels, out_channels, kernel_size, weight_init_fn, bias_init_fn
+        )
 
     def forward(self, x):
         # Upsampling1d forward
@@ -34,9 +44,17 @@ class ConvTranspose1d:
         dLdx = self.upsampling1d.backward(dLdx)
         return dLdx
 
+
 class ConvTranspose2d:
-    def __init__(self, in_channels, out_channels, kernel_size, upsampling_factor,
-                 weight_init_fn, bias_init_fn):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        upsampling_factor,
+        weight_init_fn,
+        bias_init_fn,
+    ):
 
         self.K = kernel_size
         self.S = upsampling_factor
@@ -44,7 +62,9 @@ class ConvTranspose2d:
         self.C_out = out_channels
 
         self.upsampling2d = Upsample2d(upsampling_factor=upsampling_factor)
-        self.conv2d_stride1 = Conv2d_stride1(in_channels, out_channels, kernel_size, weight_init_fn, bias_init_fn)
+        self.conv2d_stride1 = Conv2d_stride1(
+            in_channels, out_channels, kernel_size, weight_init_fn, bias_init_fn
+        )
 
     def forward(self, x):
         # Upsampling2d forward
