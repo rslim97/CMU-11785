@@ -10,12 +10,12 @@ from .test import Test
 
 # Append paths and run
 # sys.path.append("mytorch")
-from HW3.mytorch.gru_cell import *
-from HW3.mytorch.loss import *
-from HW3.mytorch.linear import *
+from HW3.P1.mytorch.gru_cell import *
+from HW3.P1.mytorch.loss import *
+from HW3.P1.mytorch.linear import *
 
 # sys.path.append("models")
-from HW3.models import char_predictor
+from HW3.P1.models import char_predictor
 
 # DO NOT CHANGE -->
 EPS = 1e-20

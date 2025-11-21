@@ -6,11 +6,11 @@ from collections import OrderedDict
 from .test import Test
 
 # sys.path.append("mytorch")
-from HW3.mytorch.rnn_cell import *
-from HW3.mytorch.loss import *
+from HW3.P1.mytorch.rnn_cell import *
+from HW3.P1.mytorch.loss import *
 
 # sys.path.append("models")
-from HW3.models.rnn_classifier import *
+from HW3.P1.models.rnn_classifier import *
 
 
 # Reference Pytorch RNN Model

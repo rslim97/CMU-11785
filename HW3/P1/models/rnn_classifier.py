@@ -1,7 +1,7 @@
 import numpy as np
 
-from HW3.mytorch.rnn_cell import *
-from HW3.mytorch.linear import *
+from HW3.P1.mytorch.rnn_cell import *
+from HW3.P1.mytorch.linear import *
 
 
 class RNNPhonemeClassifier(object):

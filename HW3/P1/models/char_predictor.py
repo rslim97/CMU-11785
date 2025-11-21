@@ -1,7 +1,7 @@
 import numpy as np
 
-from HW3.mytorch.gru_cell import *
-from HW3.mytorch.linear import *
+from HW3.P1.mytorch.gru_cell import *
+from HW3.P1.mytorch.linear import *
 
 """
 To be clear :
