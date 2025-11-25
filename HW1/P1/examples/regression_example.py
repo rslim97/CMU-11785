@@ -1,13 +1,11 @@
-import sys
+import os
 
-sys.path.append("P1/models")
-sys.path.append("P1/mytorch")
-from model import Model
-from linear import *
-from activation import *
-from batchnorm import BatchNorm1d
-from loss import *
-from sgd import SGD
+from HW1.P1.models.model import Model
+from HW1.P1.mytorch.linear import *
+from HW1.P1.mytorch.activation import *
+from HW1.P1.mytorch.batchnorm import BatchNorm1d
+from HW1.P1.mytorch.loss import *
+from HW1.P1.mytorch.sgd import SGD
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
@@ -215,6 +213,7 @@ if __name__ == "__main__":
     # plt.show()
 
     """ Animate """
+    p1_path = os.path.dirname(os.path.abspath(os.path.join(__file__, "../")))
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
     ax1.set_aspect("equal")
     # fig.suptitle('one-hidden-layer-MLP : [1, 32, 1]')
@@ -248,7 +247,11 @@ if __name__ == "__main__":
     ani = FuncAnimation(
         fig, animate, frames=frames, interval=50, blit=False, repeat=False
     )
-    ani.save("P1/gif/animation1.gif", dpi=300, writer=PillowWriter(fps=15))
+    ani.save(
+        os.path.join(p1_path, "gif", "animation1.gif"),
+        dpi=300,
+        writer=PillowWriter(fps=15),
+    )
     plt.show()
 
 """
