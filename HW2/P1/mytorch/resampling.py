@@ -50,6 +50,56 @@ class Downsample1d:
         return dLdx
 
 
+def test_upsample1D(N, C, W, S):
+    upsample = Upsample1d(S)
+    # Insert S-1 columns between each original columns.
+    # Therefore, the output will be of size W + (S-1)*(W-1).= S*(W-1) + 1
+    # W = 5, S = 3, then output_size = 5 + 2 * 4 = 13.
+
+    input_tensor = np.random.uniform(0, 5, (N, C, W))
+    print("input_tensor.shape", input_tensor.shape)
+
+    output_tensor = upsample.forward(input_tensor)
+    print("output_tensor.shape", output_tensor.shape)
+
+    dLdoutput_tensor = np.ones_like(output_tensor)
+    dLdinput_tensor = upsample.backward(dLdoutput_tensor)
+
+    print("input_tensor", input_tensor)
+    print("output_tensor", output_tensor)
+    print("dLdoutput_tensor", dLdoutput_tensor)
+    print("dLdinput_tensor", dLdinput_tensor)
+
+    print("input_tensor.shape", input_tensor.shape)
+    print("output_tensor.shape", output_tensor.shape)
+    print("dLdoutput_tensor.shape", dLdoutput_tensor.shape)
+    print("dLdinput_tensor.shape", dLdinput_tensor.shape)
+
+
+def test_downsample1D(N, C, W, S):
+    downsample = Downsample1d(S)
+    # Only keep columns with index S*i, where i=0,...,W//S.
+
+    input_tensor = np.random.uniform(0, 5, (N, C, W))
+    print("input_tensor.shape", input_tensor.shape)
+
+    output_tensor = downsample.forward(input_tensor)
+    print("output_tensor.shape", output_tensor.shape)
+
+    dLdoutput_tensor = np.ones_like(output_tensor)
+    dLdinput_tensor = downsample.backward(dLdoutput_tensor)
+
+    print("input_tensor", input_tensor)
+    print("output_tensor", output_tensor)
+    print("dLdoutput_tensor", dLdoutput_tensor)
+    print("dLdinput_tensor", dLdinput_tensor)
+
+    print("input_tensor.shape", input_tensor.shape)
+    print("output_tensor.shape", output_tensor.shape)
+    print("dLdoutput_tensor.shape", dLdoutput_tensor.shape)
+    print("dLdinput_tensor.shape", dLdinput_tensor.shape)
+
+
 class Upsample2d:
     def __init__(self, upsampling_factor):
         self.upsampling_factor = upsampling_factor
@@ -114,40 +164,57 @@ class Downsample2d:
 
 
 if __name__ == "__main__":
-    ud = Upsample1d(2)
-    x = np.array([[[1, 0, -1, 2, 1]]])
-    z = ud.forward(x)
-    dLdz = ud.backward(z)
-    print(z)
-    print(dLdz)
+    N = 1
+    C = 3
+    W = 5
+    S = 3
 
-    ds = Downsample1d(2)
-    # x = np.array([[[1, 0, 1, 2, -1, 5, 3]]])
-    # x = np.array([[[1, 0, 1, 2, -1, 5]]])
-    # x = np.array([[[1,2,3,4,5,6,7,8,9]]])
-    x = np.array([[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]])
-    z = ds.forward(x)
-    dLdz = ds.backward(z)
-    print(z)
-    print(dLdz)
+    N = 1
+    C = 3
+    W = 13
+    S = 3
 
-    ud2d = Upsample2d(2)
-    x = np.array([[[[0, 1], [2, 3]]]])
-    z = ud2d.forward(x)
-    dLdz = ud2d.backward(z)
-    print(z)
-    print(dLdz)
-    x1 = x
-    ud2d_1 = Upsample2d(3)
-    z1 = ud2d_1.forward(x1)
-    dLdz1 = ud2d_1.backward(z1)
-    print(z1)
-    print(dLdz1)
+    print("Upsample1D")
+    test_upsample1D(N, C, W, S)
+    print("\n")
+    print("Downsample1D")
+    test_downsample1D(N, C, W, S)
+    print("\n")
 
-    ds2d = Downsample2d(3)
-    x = np.random.randint(0, 5, (1, 1, 4, 4))
+    # Upsample by a factor of S=2,
+    # add S-1 rows of zeros and
+    # S-1 columns of zeros
+    print("Upsample2D")
+    print("Upsample by a factor of S=2")
+    up2d = Upsample2d(2)
+    x = np.array([[[[1, 2], [3, 4]]]])
+    z = up2d.forward(x)
+    print("z.shape", z.shape)
+    dLdz = np.random.random(z.shape)
+    dLdx = up2d.backward(dLdz)
+    print("dLdx.shape", dLdx.shape)
+    print("\n")
+
+    print("Upsample by a factor of S=5")
+    # Upsample by a factor of S=5,
+    # add S-1 rows of zeros and
+    # S-1 columns of zeros
+    up2d = Upsample2d(5)
+    x = np.array([[[[1, 2], [3, 4]]]])
+    z = up2d.forward(x)
+    print("z.shape", z.shape)
+    dLdz = np.random.random(z.shape)
+    dLdx = up2d.backward(dLdz)
+    print("dLdx.shape", dLdx.shape)
+    print("\n")
+
+    print("Downsample2D")
+    print("Downsample by a factor of S=5")
+    # Then downsample
+    ds2d = Downsample2d(5)
+    x = np.random.random(z.shape)
     z = ds2d.forward(x)
-    print(x)
-    print(z)
-    dLdz = ds2d.backward(z)
-    print(dLdz)
+    print("z.shape", z.shape)
+    dLdz = np.random.random(z.shape)
+    dLdx = ds2d.backward(dLdz)
+    print("dLdx.shape", dLdx.shape)
