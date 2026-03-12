@@ -14,9 +14,12 @@ class RNNPhonemeClassifier(object):
 
         # TODO: Understand then uncomment this code :)
         self.rnn = [
-            RNNCell(input_size, hidden_size) if i == 0
+            (
+                RNNCell(input_size, hidden_size)
+                if i == 0
                 else RNNCell(hidden_size, hidden_size)
-                    for i in range(num_layers)
+            )
+            for i in range(num_layers)
         ]
         self.output_layer = Linear(hidden_size, output_size)
 
@@ -48,57 +51,36 @@ class RNNPhonemeClassifier(object):
         return self.forward(x, h_0)
 
     def forward(self, x, h_0=None):
-        """RNN forward, multiple layers, multiple time steps.
+        """RNN forward, multiple layers, multiple time steps."""
+        N, T, D = x.shape
+        L = self.num_layers
+        H = self.hidden_size
 
-        Parameters
-        ----------
-        x: (batch_size, seq_len, input_size)
-            Input
-
-        h_0: (num_layers, batch_size, hidden_size)
-            Initial hidden states. Defaults to zeros if not specified
-
-        Returns
-        -------
-        logits: (batch_size, output_size)
-
-        Output (y): logits
-
-        """
-        # Get the batch size and sequence length, and initialize the hidden vectors given the parameters.
-        batch_size, seq_len = x.shape[0], x.shape[1]
         if h_0 is None:
-            hidden = np.zeros((self.num_layers, batch_size, self.hidden_size), dtype=float)
+            hiddens = np.zeros((L, N, H), dtype=np.float64)
         else:
-            hidden = h_0
-
-        # Save x and append the hidden vector to the hiddens list
+            L, _, H = h_0.shape
+            assert L == self.num_layers, H == self.hidden_size
+            hiddens = h_0
+        self.hiddens.append(hiddens.copy())
         self.x = x
-        self.hiddens.append(hidden.copy())
-        logits = None
-
-        ### Add your code here --->
-        # (More specific pseudocode may exist in lecture slides)
-        # Iterate through the sequence
-        #   Iterate over the length of your self.rnn (through the layers)
-        #       Run the rnn cell with the correct parameters and update
-        #       the parameters as needed. Update hidden.
-        #   Similar to above, append a copy of the current hidden array to the hiddens list
-
-        for t in range(seq_len):
-            for l in range(len(self.rnn)):
+        for t in range(T):
+            for l in range(L):
+                # Compute h_prev_l
                 if l == 0:
-                    h_prev = x[:, t, :]
+                    h_prev_l = x[:, t, :]
                 else:
-                    h_prev = hidden[l-1, :, :]
-                hidden[l] = self.rnn[l].forward(h_prev, hidden[l])
+                    h_prev_l = hiddens[l - 1, :, :]
+                # Compute h_prev_t
+                h_prev_t = hiddens[l]
+                # Perform forward on RNN Cell
+                h_next = self.rnn[l].forward(h_prev_l, h_prev_t)
+                # Update hiddens for next time step
+                hiddens[l] = h_next
 
-            self.hiddens.append(hidden.copy())
-        # Get the outputs from the last time step using the linear layer and return it
-        # <--------------------------
-        # print(hidden[-1])
-        # print(hidden[-1].shape)
-        logits = self.output_layer.forward(hidden[-1])
+            self.hiddens.append(hiddens.copy())
+
+        logits = self.output_layer.forward(h_next)
         return logits
 
     def backward(self, delta):
@@ -111,7 +93,7 @@ class RNNPhonemeClassifier(object):
         delta: Upstream gradient, dL/dy from linear layer before loss function
         i.e. in last RNN Cell, h_next -> y -> L: (N, H_out)
         self.hiddens: Contains h_next computed in each RNN Cell: (T+1, L, N, H)
-        self.x: Input sequence: (N, T, H)
+        self.x: Input sequence: (N, T, D)
         dh_next: Contains upstream gradients: (L, N, H)
         for backprop, cache = (h_next, h_prev_l, h_prev_t, dh_next)
         """
@@ -126,20 +108,23 @@ class RNNPhonemeClassifier(object):
         for t in reversed(range(T)):
             for l in reversed(range(L)):
                 # Compute variables in cache need for backprop
-                h_next = self.hiddens[t+1][l, :, :]
+                h_next = self.hiddens[t + 1][l, :, :]
                 h_prev_t = self.hiddens[t][l, :, :]
                 # h_prev_l can come from either input sequence or h_next from previous cell, l-1
-                if l==0:
+                if l == 0:
                     h_prev_l = self.x[:, t, :]
                 else:
-                    h_prev_l = self.hiddens[t+1][l-1, :, :]
+                    h_prev_l = self.hiddens[t + 1][l - 1, :, :]
                 # Done computing variables in cache needed for backprop
-                h_prev_l, h_prev_t = self.rnn[l].backward(dh_next[l], h_next, h_prev_l, h_prev_t)
+                # Perform backprop on RNN Cell
+                h_prev_l, h_prev_t = self.rnn[l].backward(
+                    dh_next[l], h_next, h_prev_l, h_prev_t
+                )
                 # Update dh_next for the next previous time step
                 dh_next[l] = h_prev_t
-                # Add downstream gradient to the upstream gradient of the next previous cell step 
-                if l!=0:
-                    dh_next[l-1] += h_prev_l
+                # Add downstream gradient to the upstream gradient of the next previous cell step
+                if l != 0:
+                    dh_next[l - 1] += h_prev_l
         return dh_next / N
 
 
