@@ -51,7 +51,15 @@ class RNNPhonemeClassifier(object):
         return self.forward(x, h_0)
 
     def forward(self, x, h_0=None):
-        """RNN forward, multiple layers, multiple time steps."""
+        """RNN forward, multiple layers, multiple time steps.
+        x: input sequence: (N, T, D)
+        self.x: cache (for backprop) of input sequence: (N, T, D)
+        h0: initial hidden state (optional), zeros if not given: (L, N, H)
+        self.hiddens: cache (for backprop) of computed hidden states (h_next): (T+1, L, N, H)
+        hiddens: computed hidden states for all the layers (L, N, H)
+        h_next: hidden state (N, H)
+        logits: output (N, H_out)
+        """
         N, T, D = x.shape
         L = self.num_layers
         H = self.hidden_size
@@ -93,8 +101,8 @@ class RNNPhonemeClassifier(object):
         delta: Upstream gradient, dL/dy from linear layer before loss function
         i.e. in last RNN Cell, h_next -> y -> L: (N, H_out)
         self.hiddens: Contains h_next computed in each RNN Cell: (T+1, L, N, H)
-        self.x: Input sequence: (N, T, D)
-        dh_next: Contains upstream gradients: (L, N, H)
+        self.x: input sequence: (N, T, D)
+        dh_next: contains upstream gradients: (L, N, H)
         for backprop, cache = (h_next, h_prev_l, h_prev_t, dh_next)
         """
         T = self.x.shape[1]
