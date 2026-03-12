@@ -103,71 +103,45 @@ class RNNPhonemeClassifier(object):
 
     def backward(self, delta):
         """RNN Back Propagation Through Time (BPTT).
-
-        Parameters
-        ----------
-        delta: (batch_size, hidden_size)
-
-        gradient: dY(seq_len-1)
-                gradient w.r.t. the last time step output.
-
-        Returns
-        -------
-        dh_0: (num_layers, batch_size, hidden_size)
-
-        gradient w.r.t. the initial hidden states
-
+        N: number of samples or batch size
+        L: number of layers
+        H: hidden dimension
+        D: input dimension
+        H_out: output dimension
+        delta: Upstream gradient, dL/dy from linear layer before loss function
+        i.e. in last RNN Cell, h_next -> y -> L: (N, H_out)
+        self.hiddens: Contains h_next computed in each RNN Cell: (T+1, L, N, H)
+        self.x: Input sequence: (N, T, H)
+        dh_next: Contains upstream gradients: (L, N, H)
+        for backprop, cache = (h_next, h_prev_l, h_prev_t, dh_next)
         """
-        # Initilizations
-        batch_size, seq_len = self.x.shape[0], self.x.shape[1]
-        dh = np.zeros((self.num_layers, batch_size, self.hidden_size), dtype=float)
-        dh[-1] = self.output_layer.backward(delta)
-
-        """
-
-        * Notes:
-        * More specific pseudocode may exist in lecture slides and a visualization
-          exists in the writeup.
-        * WATCH out for off by 1 errors due to implementation decisions.
-
-        Pseudocode:
-        * Iterate in reverse order of time (from seq_len-1 to 0)
-            * Iterate in reverse order of layers (from num_layers-1 to 0)
-                * Get h_prev_l either from hiddens or x depending on the layer
-                    (Recall that hiddens has an extra initial hidden state)
-                * Use dh and hiddens to get the other parameters for the backward method
-                    (Recall that hiddens has an extra initial hidden state)
-                * Update dh with the new dh from the backward pass of the rnn cell
-                * If you aren't at the first layer, you will want to add
-                  dx to the gradient from l-1th layer.
-
-        * Normalize dh by batch_size since initial hidden states are also treated
-          as parameters of the network (divide by batch size)
-
-        Tip: You may or may not require += at places. Think about it and code
-
-        """
-        for t in reversed(range(seq_len)):
-            for l in reversed(range(len(self.rnn))):
-                h_t = self.hiddens[t + 1][l]
-                h_prev_t = self.hiddens[t][l]
-                # Get h_prev_l from hiddens or from x
-                # If at input layer
-                if l == 0:
+        T = self.x.shape[1]
+        L = self.num_layers
+        H = self.hidden_size
+        N, _ = delta.shape
+        dh_next = np.zeros((L, N, H), dtype=np.float64)
+        # Compute upstream gradient, dL/dh_next, for last RNN Cell
+        dh_next[-1] = self.output_layer.backward(delta)
+        # self.output_layer.backward(delta)
+        for t in reversed(range(T)):
+            for l in reversed(range(L)):
+                # Compute variables in cache need for backprop
+                h_next = self.hiddens[t+1][l, :, :]
+                h_prev_t = self.hiddens[t][l, :, :]
+                # h_prev_l can come from either input sequence or h_next from previous cell, l-1
+                if l==0:
                     h_prev_l = self.x[:, t, :]
                 else:
-                    # Recall hiddens has an extra data at time -1 (initial hidden state), hence the need for t-1
-                    h_prev_l = self.hiddens[t + 1][l - 1]
-                # Call backwards
-                # Use dh and hiddens to get the other parameters for the backward method
-                dx, dh_prev_t = self.rnn[l].backward(dh[l], h_t, h_prev_l, h_prev_t)
-                # Update dh with the new dh from the backward pass of the rnn cell
-                dh[l] = dh_prev_t
-                # If you aren't at the first layer, you will want to add dx to the gradient from l-1th layer.
-                if l != 0:
-                    dh[l - 1] += dx
+                    h_prev_l = self.hiddens[t+1][l-1, :, :]
+                # Done computing variables in cache needed for backprop
+                h_prev_l, h_prev_t = self.rnn[l].backward(dh_next[l], h_next, h_prev_l, h_prev_t)
+                # Update dh_next for the next previous time step
+                dh_next[l] = h_prev_t
+                # Add downstream gradient to the upstream gradient of the next previous cell step 
+                if l!=0:
+                    dh_next[l-1] += h_prev_l
+        return dh_next / N
 
-        return dh / batch_size
 
 if __name__ == "__main__":
     input_size = 3

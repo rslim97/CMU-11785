@@ -43,16 +43,13 @@ class RNNCell:
         return self.forward(x, h_prev_t)
 
     def forward(self, x, h_prev_t):
-        # print("forward x ", x)
-        # print("h_prev_t ", h_prev_t)
-        h_t =  h_prev_t @ self.W_hh.T + self.b_ih + x @ self.W_ih.T + self.b_hh
-        out = self.activation.forward(h_t)
-        # print("out ", out)
+        h_next =  h_prev_t @ self.W_hh.T + self.b_ih + x @ self.W_ih.T + self.b_hh
+        out = self.activation.forward(h_next)
         return out
 
-    def backward(self, delta, h_t, h_prev_l, h_prev_t):
-        dz = self.activation.backward(delta, h_t)
-        batch_size = delta.shape[0]
+    def backward(self, dh_next, h_next, h_prev_l, h_prev_t):
+        dz = self.activation.backward(dh_next, h_next)
+        batch_size = dh_next.shape[0]
         # 1) Compute the averaged gradients of the weights and biases
         self.dW_ih += dz.T @ h_prev_l / batch_size
         self.dW_hh += dz.T @ h_prev_t / batch_size
